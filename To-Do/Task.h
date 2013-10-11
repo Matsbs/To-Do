@@ -11,7 +11,7 @@
 @interface Task : NSObject
 
 @property (nonatomic, retain) NSString *name;
-@property (nonatomic, retain) NSString *description;
+@property (nonatomic, retain) NSString *note;
 @property (nonatomic, retain) NSString *date;
 
 @end

@@ -8,11 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "Task.h"
+#import "ViewNoteController.h"
 
 @interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) UITableView *tableView;
-@property (nonatomic, retain) NSMutableArray *attractionsArray;
+@property (nonatomic, retain) NSMutableArray *taskArray;
 @property (nonatomic, retain) Task *task;
 
 @end
