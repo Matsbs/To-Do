@@ -19,6 +19,8 @@
 		4EA95C0418081E500061D231 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BEC18081E4F0061D231 /* UIKit.framework */; };
 		4EA95C0C18081E500061D231 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EA95C0A18081E500061D231 /* InfoPlist.strings */; };
 		4EA95C0E18081E500061D231 /* To_DoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA95C0D18081E500061D231 /* To_DoTests.m */; };
+		4EA95C2018081E8C0061D231 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA95C1918081E8C0061D231 /* MainViewController.m */; };
+		4EA95C2218081E8C0061D231 /* Task.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA95C1E18081E8C0061D231 /* Task.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +50,10 @@
 		4EA95C0918081E500061D231 /* To-DoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "To-DoTests-Info.plist"; sourceTree = "<group>"; };
 		4EA95C0B18081E500061D231 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4EA95C0D18081E500061D231 /* To_DoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = To_DoTests.m; sourceTree = "<group>"; };
+		4EA95C1918081E8C0061D231 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		4EA95C1A18081E8C0061D231 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		4EA95C1C18081E8C0061D231 /* Task.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Task.h; sourceTree = "<group>"; };
+		4EA95C1E18081E8C0061D231 /* Task.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Task.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +113,11 @@
 		4EA95BEE18081E4F0061D231 /* To-Do */ = {
 			isa = PBXGroup;
 			children = (
+				4EA95C1A18081E8C0061D231 /* MainViewController.h */,
+				4EA95C1C18081E8C0061D231 /* Task.h */,
 				4EA95BF718081E4F0061D231 /* To_DoAppDelegate.h */,
+				4EA95C1918081E8C0061D231 /* MainViewController.m */,
+				4EA95C1E18081E8C0061D231 /* Task.m */,
 				4EA95BF818081E4F0061D231 /* To_DoAppDelegate.m */,
 				4EA95BFA18081E4F0061D231 /* Images.xcassets */,
 				4EA95BEF18081E4F0061D231 /* Supporting Files */,
@@ -242,6 +252,8 @@
 			files = (
 				4EA95BF918081E4F0061D231 /* To_DoAppDelegate.m in Sources */,
 				4EA95BF518081E4F0061D231 /* main.m in Sources */,
+				4EA95C2218081E8C0061D231 /* Task.m in Sources */,
+				4EA95C2018081E8C0061D231 /* MainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
