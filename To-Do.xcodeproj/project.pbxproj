@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E020328180B002800194101 /* NewTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E020327180B002800194101 /* NewTaskViewController.m */; };
 		4EA95BE918081E4F0061D231 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BE818081E4F0061D231 /* Foundation.framework */; };
 		4EA95BEB18081E4F0061D231 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BEA18081E4F0061D231 /* CoreGraphics.framework */; };
 		4EA95BED18081E4F0061D231 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BEC18081E4F0061D231 /* UIKit.framework */; };
@@ -35,6 +36,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E020326180B002800194101 /* NewTaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTaskViewController.h; sourceTree = "<group>"; };
+		4E020327180B002800194101 /* NewTaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewTaskViewController.m; sourceTree = "<group>"; };
 		4EA95BE518081E4F0061D231 /* To-Do.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EA95BE818081E4F0061D231 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4EA95BEA18081E4F0061D231 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -124,6 +127,8 @@
 				4EA95C1918081E8C0061D231 /* MainViewController.m */,
 				4EAAF789180834B700AEFB59 /* ViewNoteController.h */,
 				4EAAF78A180834B700AEFB59 /* ViewNoteController.m */,
+				4E020326180B002800194101 /* NewTaskViewController.h */,
+				4E020327180B002800194101 /* NewTaskViewController.m */,
 				4EA95BFA18081E4F0061D231 /* Images.xcassets */,
 				4EA95BEF18081E4F0061D231 /* Supporting Files */,
 			);
@@ -257,6 +262,7 @@
 			files = (
 				4EA95BF918081E4F0061D231 /* To_DoAppDelegate.m in Sources */,
 				4EAAF78B180834B700AEFB59 /* ViewNoteController.m in Sources */,
+				4E020328180B002800194101 /* NewTaskViewController.m in Sources */,
 				4EA95BF518081E4F0061D231 /* main.m in Sources */,
 				4EA95C2218081E8C0061D231 /* Task.m in Sources */,
 				4EA95C2018081E8C0061D231 /* MainViewController.m in Sources */,

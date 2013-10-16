@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "Task.h"
 
-@interface ViewNoteController : UIViewController
+@interface ViewNoteController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) IBOutlet UITextView *nameView;
 @property (nonatomic, retain) IBOutlet UITextView *dateView;
 @property (nonatomic, retain) IBOutlet UITextView *noteView;
 @property (nonatomic, retain) Task *task;
+@property (nonatomic, retain) UITableView *tableView2;
 
 @end
