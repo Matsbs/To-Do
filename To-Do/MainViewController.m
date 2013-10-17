@@ -21,14 +21,7 @@
     return _taskArray;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    //Init objects
-    //Move to model? Add Task
-    //self.taskArray = [[NSMutableArray alloc] init];
-    
+- (void) createObjects{
     self.task = [[Task alloc] init];
     self.task.name = @"Buy groceries";
     self.task.note = @"Bread, Milk, Water";
@@ -46,7 +39,37 @@
     self.task.note = @"Pay for three months";
     self.task.date = @"21.11.2013";
     [self.taskArray addObject:self.task];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
     
+    //if ([self.taskArray count]==0) {
+        self.task = [[Task alloc] init];
+        self.task.name = @"Buy groceries";
+        self.task.note = @"Bread, Milk, Water";
+        self.task.date = @"16.12.2013";
+        [self.taskArray addObject:self.task];
+        
+        self.task = [[Task alloc] init];
+        self.task.name = @"Wash the car";
+        self.task.note = @"Remeber to wax as well";
+        self.task.date = @"10.11.2013";
+        [self.taskArray addObject:self.task];
+        
+        self.task = [[Task alloc] init];
+        self.task.name = @"Pay the phone bill";
+        self.task.note = @"Pay for three months";
+        self.task.date = @"21.11.2013";
+        [self.taskArray addObject:self.task];
+    //}
+    
+    
+	// Do any additional setup after loading the view.
+    //Init objects
+    //Move to model? Add Task
+    //self.taskArray = [[NSMutableArray alloc] init];
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStylePlain];
     
     self.tableView.rowHeight = 60;
@@ -60,6 +83,8 @@
     
     Task *test = [self.taskArray objectAtIndex:1];
     NSLog(@"hei %@",test.name);
+    NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
+    
     
 }
 
@@ -68,6 +93,24 @@
     NSLog(@"This was returned from ViewControllerB %@",item.name);
     //not working
     [self.taskArray addObject:item];
+    NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
+    [self.tableView reloadData];
+    
+    if([self.taskArray containsObject:item]){
+        NSLog(@"yeyeee");
+        //[self.taskArray removeObject:item];
+    }
+    
+}
+
+- (void)removeItemViewController:(ViewNoteController *)controller didFinishEnteringItem:(Task *)item
+{
+    if([self.taskArray containsObject:item]){
+        NSLog(@"yeyeee");
+        [self.taskArray removeObject:item];
+    }
+    [self.tableView reloadData];
+    
 }
 
 - (IBAction)refreshClicked:(id)sender {
@@ -122,6 +165,7 @@
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     ViewNoteController *viewNote = [[ViewNoteController alloc] init];
     viewNote.task = [self.taskArray objectAtIndex:indexPath.row];
+    viewNote.delegate = self;
     [self.navigationController pushViewController:viewNote animated:YES];
     
     

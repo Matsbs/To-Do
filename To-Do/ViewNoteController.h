@@ -9,7 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "Task.h"
 
+@class ViewNoteController;
+
+@protocol ViewNoteControllerDelegate <NSObject>
+- (void)removeItemViewController:(ViewNoteController *)controller didFinishEnteringItem:(Task *)item;
+@end
+
 @interface ViewNoteController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, weak) id <ViewNoteControllerDelegate> delegate;
 
 @property (nonatomic, retain) IBOutlet UITextView *nameView;
 @property (nonatomic, retain) IBOutlet UITextView *dateView;

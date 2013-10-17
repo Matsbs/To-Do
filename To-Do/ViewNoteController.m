@@ -22,7 +22,7 @@
     
     //MAKE A TABLE VIEW
     
-    self.title = self.task.name;
+    //self.title = self.task.name;
     
     //self.view.backgroundColor = [UIColor whiteColor];
     
@@ -48,16 +48,18 @@
     self.tableView2.dataSource = self;
     [self.view addSubview:self.tableView2];
     self.title = @"Details";
-    UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(refreshClicked:)] ;
+    UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(refreshClicked:)] ;
     self.navigationItem.rightBarButtonItem = anotherButton;
-    
-    
-    
- 
-    
 }
 
 - (IBAction)refreshClicked:(id)sender {
+   
+
+    //[taskArray addObject:self.task];
+    
+    //NSString *itemToPassBack = @"Pass this value back to ViewControllerA";
+    [self.delegate removeItemViewController:self didFinishEnteringItem:self.task];
+    [self.navigationController popToRootViewControllerAnimated:YES];
     
 }
 

@@ -11,7 +11,7 @@
 #import "ViewNoteController.h"
 #import "NewTaskViewController.h"
 
-@interface MainViewController : UIViewController <NewTaskViewControllerDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface MainViewController : UIViewController <NewTaskViewControllerDelegate, ViewNoteControllerDelegate,  UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSMutableArray *taskArray;

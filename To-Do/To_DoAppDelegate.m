@@ -17,6 +17,7 @@
     MainViewController *mainView = [[MainViewController alloc] init];
     self.navController = [[UINavigationController alloc]initWithRootViewController:mainView];
     //[self.window addSubview:self.navController.view];
+   
     [self.window setRootViewController:self.navController];
     [self.window makeKeyAndVisible];
     return YES;
