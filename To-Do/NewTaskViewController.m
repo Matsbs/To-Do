@@ -31,6 +31,15 @@
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneClicked:)] ;
     self.navigationItem.rightBarButtonItem = doneButton;
+    
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    [self.tableView addGestureRecognizer:gestureRecognizer];
+}
+
+- (void) hideKeyboard{
+    [self.nameField resignFirstResponder];
+    [self.dateField resignFirstResponder];
+    [self.noteField resignFirstResponder];
 }
 
 - (IBAction)doneClicked:(id)sender {
@@ -57,16 +66,19 @@
     if (cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
+    CGRect cellRect = [cell bounds];
+    CGFloat cellWidth = cellRect.size.width;
+    CGFloat cellHeight = cellRect.size.height;
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
-            self.nameField = [[UITextField alloc] initWithFrame:CGRectMake(15, 15, 185, 40)];
+            self.nameField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth,cellHeight)];
             self.nameField.placeholder = @"Name";
             self.nameField.delegate = self;
             [cell.contentView addSubview:self.nameField];
         }else if(indexPath.row == 1){
             cell.textLabel.text = @"Date:";
-            self.dateField = [[UITextField alloc] initWithFrame:CGRectMake(60, 10, 185, 40)];
-            self.dateField.placeholder = @"01.01.2013";
+            self.dateField = [[UITextField alloc] initWithFrame:CGRectMake(60, 10, cellWidth, cellHeight)];
+            self.dateField.placeholder = @"";
             self.dateField.delegate = self;
             [cell.contentView addSubview:self.dateField];
         }
@@ -74,9 +86,10 @@
         if (indexPath.row == 0) {
             cell.textLabel.text = @"Notes";
         }else{
-            self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 15, 185, 40)];
+            self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
             self.noteField.placeholder = @"";
             self.noteField.delegate = self;
+            self.noteField.tag = 1;
             [cell.contentView addSubview:self.noteField];
         }
     }
@@ -84,19 +97,44 @@
     return cell;
 }
 
-//Extra functions
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    //Notes field started being edited
+    if (textField.tag == 1){
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.35f];
+        CGRect frame = self.view.frame;
+        frame.origin.y = -120;
+        [self.view setFrame:frame];
+        [UIView commitAnimations];
+    }
+}
 
 -(void)textFieldDidEndEditing:(UITextField *)textField{
-    //NSLog(@"Text field ended editing");
+    if (textField.tag == 1){
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.35f];
+        CGRect frame = self.view.frame;
+        frame.origin.y = 0;
+        [self.view setFrame:frame];
+        [UIView commitAnimations];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     NSLog(@"You entered %@",textField.text);
-    [self.nameField resignFirstResponder];
-    [self.dateField resignFirstResponder];
-    [self.noteField resignFirstResponder];
+    [self hideKeyboard];
+    if (textField.tag == 1){
+        [UIView beginAnimations:nil context:NULL];
+        [UIView setAnimationDuration:0.35f];
+        CGRect frame = self.view.frame;
+        frame.origin.y = 0;
+        [self.view setFrame:frame];
+        [UIView commitAnimations];
+    }
     return YES;
 }
+
+//Extra functions
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
