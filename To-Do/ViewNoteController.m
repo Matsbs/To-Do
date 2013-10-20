@@ -41,7 +41,11 @@
 //    self.noteView.font = [UIFont fontWithName:@"Helvetica" size:14];
 //    [self.view addSubview:self.noteView];
     
-    self.tableView2 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStyleGrouped];
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    self.tableView2 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStyleGrouped];
     
     self.tableView2.rowHeight = 60;
     self.tableView2.delegate = self;
@@ -126,7 +130,11 @@
     }
         //cell.detailTextLabel.text = self.task.date;
     //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+
+}
 @end

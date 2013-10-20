@@ -45,32 +45,60 @@
 {
     [super viewDidLoad];
     
-    //if ([self.taskArray count]==0) {
-        self.task = [[Task alloc] init];
-        self.task.name = @"Buy groceries";
-        self.task.note = @"Bread, Milk, Water";
-        self.task.date = @"16.12.2013";
-        [self.taskArray addObject:self.task];
-        
-        self.task = [[Task alloc] init];
-        self.task.name = @"Wash the car";
-        self.task.note = @"Remeber to wax as well";
-        self.task.date = @"10.11.2013";
-        [self.taskArray addObject:self.task];
-        
-        self.task = [[Task alloc] init];
-        self.task.name = @"Pay the phone bill";
-        self.task.note = @"Pay for three months";
-        self.task.date = @"21.11.2013";
-        [self.taskArray addObject:self.task];
-    //}
+    [self loadFromMemory];
+    //self.taskArray = [[NSMutableArray alloc ] init];
+    //self.taskArray = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults]
+                                                     //objectForKey:@"Key1"]];
+
+//    if ([self.taskArray count]==0) {
+//        
+//        NSMutableArray *test1 = [[NSMutableArray alloc] init];
+//        self.task = [[Task alloc] init];
+//        self.task.name = @"Buy groceries";
+//        self.task.note = @"Bread, Milk, Water";
+//        self.task.date = @"16.12.2013";
+//        [self.taskArray addObject:self.task];
+//        [test1 addObject:self.task.name];
+//        [test1 addObject:self.task.note];
+//        [test1 addObject:self.task.date];
+//        
+//        
+//        self.task = [[Task alloc] init];
+//        self.task.name = @"Wash the car";
+//        self.task.note = @"Remember to wax as well";
+//        self.task.date = @"10.11.2013";
+//        [self.taskArray addObject:self.task];
+//        
+//        self.task = [[Task alloc] init];
+//        self.task.name = @"Pay the phone bill";
+//        self.task.note = @"Pay for three months";
+//        self.task.date = @"21.11.2013";
+//        [self.taskArray addObject:self.task];
+//        
+//        
+//        [[NSUserDefaults standardUserDefaults] setObject:@"text to save" forKey:@"Key"];
+//        
+//        //NSMutableArray *test = [[NSMutableArray alloc] init];
+//        
+//        //[[NSUserDefaults standardUserDefaults] setObject:self.taskArray forKey:@"Key12"];
+//        
+//        
+//        
+//    }
+    
+    
+    
     
     
 	// Do any additional setup after loading the view.
     //Init objects
     //Move to model? Add Task
     //self.taskArray = [[NSMutableArray alloc] init];
-    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStylePlain];
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
     
     self.tableView.rowHeight = 60;
     self.tableView.delegate = self;
@@ -81,11 +109,10 @@
     UIBarButtonItem *anotherButton = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(refreshClicked:)] ;
     self.navigationItem.rightBarButtonItem = anotherButton;
     
-    Task *test = [self.taskArray objectAtIndex:1];
-    NSLog(@"hei %@",test.name);
-    NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
-    
-    
+    //Task *test = [self.taskArray objectAtIndex:1];
+    //NSLog(@"hei %@",test.name);
+    //NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
+    NSLog(@"%@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]);
 }
 
 - (void)addItemViewController:(NewTaskViewController *)controller didFinishEnteringItem:(Task *)item
@@ -93,14 +120,77 @@
     NSLog(@"This was returned from ViewControllerB %@",item.name);
     //not working
     [self.taskArray addObject:item];
-    NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
+    //NSLog(@"Number of elements: %lu", (unsigned long)[self.taskArray count]);
     [self.tableView reloadData];
     
     if([self.taskArray containsObject:item]){
         NSLog(@"yeyeee");
         //[self.taskArray removeObject:item];
     }
+   
     
+    
+    //[[NSUserDefaults standardUserDefaults] setObject:@"hei" forKey:@"Key"];
+    NSString *fromMem = [[NSString alloc] init];
+    fromMem = [[NSUserDefaults standardUserDefaults] objectForKey:@"Key"];
+    NSLog(@"from mem: %@",fromMem);
+    
+    [self saveToMemory];
+    
+    NSLog(@"%@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]);
+}
+
+- (void) saveToMemory{
+    [self resetDefaults];
+    for (int i=0; i<[self.taskArray count]; i++) {
+        NSString *counter = [NSString stringWithFormat:@"%d",i];
+        NSString *name = @"Task";
+        NSString *task = [name stringByAppendingString:counter];
+        NSString *key1 = [task stringByAppendingString:@"name"];
+        Task *taskObject = [self.taskArray objectAtIndex:i];
+        [[NSUserDefaults standardUserDefaults] setObject:taskObject.name forKey:key1];
+        NSString *key2 = [task stringByAppendingString:@"date"];
+        [[NSUserDefaults standardUserDefaults] setObject:taskObject.date forKey:key2];
+        NSString *key3 = [task stringByAppendingString:@"note"];
+        [[NSUserDefaults standardUserDefaults] setObject:taskObject.note forKey:key3];
+        NSLog(@"Saved to mem %@",key1);
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)resetDefaults {
+    NSUserDefaults * defs = [NSUserDefaults standardUserDefaults];
+    NSDictionary * dict = [defs dictionaryRepresentation];
+    for (id key in dict) {
+        [defs removeObjectForKey:key];
+    }
+    [defs synchronize];
+}
+
+- (void) loadFromMemory{
+    NSString *key1 = [@"Task1" stringByAppendingString:@"name"];
+    NSString *testing = [[NSUserDefaults standardUserDefaults] objectForKey:@"hei"];
+    NSLog(@"dette er første mem:%@",testing);
+    
+    for (int i=0; i<20; i++) {
+        NSString *counter = [NSString stringWithFormat:@"%d",i];
+        NSString *name = @"Task";
+        NSString *task = [name stringByAppendingString:counter];
+        NSString *key1 = [task stringByAppendingString:@"name"];
+        self.task = [[Task alloc] init];
+        self.task.name = [[NSUserDefaults standardUserDefaults] objectForKey:key1];
+        NSString *key2 = [task stringByAppendingString:@"date"];
+        self.task.date = [[NSUserDefaults standardUserDefaults] objectForKey:key2];
+        NSString *key3 = [task stringByAppendingString:@"note"];
+        self.task.note = [[NSUserDefaults standardUserDefaults] objectForKey:key3];
+        if ([self.task.name length]!=0){
+            [self.taskArray addObject:self.task];
+
+        }
+        NSLog(@"Navn:%@",key1);
+        NSLog(@"%lu",(unsigned long)[self.task.name length]);
+        NSLog(@"Loaded from mem!");
+    }
 }
 
 - (void)removeItemViewController:(ViewNoteController *)controller didFinishEnteringItem:(Task *)item
@@ -110,6 +200,10 @@
         [self.taskArray removeObject:item];
     }
     [self.tableView reloadData];
+    
+    [self saveToMemory];
+    
+    NSLog(@"%@", [[[NSUserDefaults standardUserDefaults] dictionaryRepresentation] allKeys]);
     
 }
 
@@ -158,6 +252,8 @@
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     
     return cell;
+    
+    
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{

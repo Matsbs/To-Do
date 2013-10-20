@@ -50,8 +50,12 @@
     //    self.noteView.font = [UIFont fontWithName:@"Helvetica" size:14];
     //    [self.view addSubview:self.noteView];
     
-    self.tableView3 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, 320, 460) style:UITableViewStyleGrouped];
     
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    self.tableView3 = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight+300) style:UITableViewStyleGrouped];
+    self.tableView3.scrollEnabled = YES;
     self.tableView3.rowHeight = 60;
     self.tableView3.delegate = self;
     self.tableView3.dataSource = self;
@@ -174,7 +178,7 @@
 
     //cell.detailTextLabel.text = @"Date";
     //cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 -(void)textFieldDidEndEditing:(UITextField *)textField{
@@ -210,6 +214,11 @@
     UITableViewCell *cell = [self.tableView3 dequeueReusableCellWithIdentifier:CellIdentifier];
   
         cell.textLabel.text = @"";
+    //if (indexPath.section ==1) {
+        //UIView *newFrame = [[UIView alloc] initWithFrame:CGRectMake(0, 400, 320,320)];
+        //[self.view addSubview:newFrame];
+        //NSLog(@"added view");
+    //}
     
     
 }
