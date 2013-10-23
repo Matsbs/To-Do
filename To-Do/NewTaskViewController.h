@@ -17,8 +17,9 @@
 @end
 
 @interface NewTaskViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate>
-
+//Part of communication protocol
 @property (nonatomic, weak) id <NewTaskViewControllerDelegate> delegate;
+
 @property (nonatomic, retain) IBOutlet UITextField *nameField;
 @property (nonatomic, retain) IBOutlet UITextField *dateField;
 @property (nonatomic, retain) IBOutlet UITextField *noteField;
