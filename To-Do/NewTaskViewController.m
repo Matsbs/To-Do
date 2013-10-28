@@ -9,6 +9,7 @@
 #import "NewTaskViewController.h"
 
 
+
 @interface NewTaskViewController ()
 
 @end
@@ -29,26 +30,35 @@
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     
-    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Done" style:UIBarButtonItemStylePlain target:self action:@selector(doneClicked:)] ;
+    UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(doneClicked:)] ;
     self.navigationItem.rightBarButtonItem = doneButton;
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-    [self.tableView addGestureRecognizer:gestureRecognizer];
+//    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+//    [self.tableView addGestureRecognizer:gestureRecognizer];
+    
+    self.task = [[Task alloc] init];
+    self.task.notes = [[NSMutableArray alloc]init];
+    self.task.note = [[Note alloc] init];
+   
 }
 
 - (void) hideKeyboard{
     [self.nameField resignFirstResponder];
     [self.dateField resignFirstResponder];
     [self.noteField resignFirstResponder];
+    [self.categoryField resignFirstResponder];
 }
 
 - (IBAction)doneClicked:(id)sender {
-    self.task = [[Task alloc] init];
-    self.task.name = self.nameField.text;
-    self.task.note = self.noteField.text;
-    self.task.date = self.dateField.text;
-    //Call the addItemViewController in mainView to add task to taskArray
-    [self.delegate addItemViewController:self didFinishEnteringItem:self.task];
+    if (self.nameField.text.length > 0) {
+        self.task = [[Task alloc] init];
+        self.task.name = self.nameField.text;
+        self.task.category.name = self.categoryField.text;
+        //self.task.note.description = self.noteField.text;
+        self.task.date = self.dateField.text;
+        //Call the addItemViewController in mainView to add task to taskArray
+        [self.delegate addItemViewController:self didFinishEnteringItem:self.task];
+    }
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -57,14 +67,23 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 2;
+    if (section == 0) {
+        return 3;
+    }else {
+        return 1;
+//        if (self.task.notes.count>0) {
+//            return self.task.notes.count+1;
+//        }else{
+//            return 1;
+//        }
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil){
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     CGRect cellRect = [cell bounds];
     CGFloat cellWidth = cellRect.size.width;
@@ -81,20 +100,72 @@
             self.dateField.placeholder = @"";
             self.dateField.delegate = self;
             [cell.contentView addSubview:self.dateField];
+        }else if(indexPath.row == 2){
+            cell.textLabel.text = @"Category:";
+            self.categoryField = [[UITextField alloc] initWithFrame:CGRectMake(95, 10, cellWidth, cellHeight)];
+            self.categoryField.placeholder = @"";
+            self.categoryField.delegate = self;
+            [cell.contentView addSubview:self.categoryField];
         }
     }else if (indexPath.section == 1){
         if (indexPath.row == 0) {
-            cell.textLabel.text = @"Notes";
-        }else{
-            self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
-            self.noteField.placeholder = @"";
-            self.noteField.delegate = self;
-            self.noteField.tag = 1;
-            [cell.contentView addSubview:self.noteField];
+            cell.textLabel.text = @"Add Notes";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            
+//            UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//            //button.titleLabel.text = @"Add note";
+//            //set the position of the button
+//            button.frame = CGRectMake(cell.frame.origin.x + 200, cell.frame.origin.y, 100, 60);
+//            [button setTitle:@"Add note" forState:UIControlStateNormal];
+//            [button addTarget:self action:@selector(test:) forControlEvents:UIControlEventTouchUpInside];
+//            button.backgroundColor= [UIColor clearColor];
+//            [cell.contentView addSubview:button];
+            
+//        }else{
+////            self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
+////            self.noteField.placeholder = @"";
+////            self.noteField.delegate = self;
+////            self.noteField.tag = 1;
+////            [cell.contentView addSubview:self.noteField];
+//            UITextField *noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
+//            noteField.placeholder = @"";
+//            noteField.delegate = self;
+//            noteField.tag = 1;
+//            [cell.contentView addSubview:noteField];
+//            
+//            UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+//            //set the position of the button
+//            button.frame = CGRectMake(cell.frame.origin.x + 200, cell.frame.origin.y, 100, 60);
+//            [button setTitle:@"Remove note" forState:UIControlStateNormal];
+//            [button addTarget:self action:@selector(removeNote:) forControlEvents:UIControlEventTouchUpInside];
+//            button.backgroundColor= [UIColor clearColor];
+//            [button setTag:indexPath.row];
+//            [cell.contentView addSubview:button];
+            
         }
     }
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    //cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
+    
+    //PRINT ALL TAGS AND UPDATE!
+}
+
+-(IBAction)removeNote:(id)sender{
+    NSLog(@"Remove sender tag: %i", [sender tag]);
+    [self.task.notes removeObjectAtIndex:0];
+    NSIndexSet *section1 = [NSIndexSet indexSetWithIndex:1];
+    [self.tableView reloadSections:section1 withRowAnimation:UITableViewRowAnimationAutomatic];
+    //[self.tableView reloadData];
+}
+-(IBAction)test:(id)sender{
+    self.task.note.description = @"hello";
+    [self.task.notes addObject:self.task.note];
+    
+    NSLog(@"Number of notes %i",self.task.notes.count);
+    
+    NSIndexSet *section1 = [NSIndexSet indexSetWithIndex:1];
+    [self.tableView reloadSections:section1 withRowAnimation:UITableViewRowAnimationAutomatic];
+    //[self.tableView reloadData];
 }
 
 -(void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -134,11 +205,18 @@
     return YES;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if (indexPath.section==1) {
+        NotesViewController *noteView = [[NotesViewController alloc] init];
+        //noteView.delegate = self;
+        [self.navigationController pushViewController:noteView animated:YES];
+    }
+}
+
 //Extra functions
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
 
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

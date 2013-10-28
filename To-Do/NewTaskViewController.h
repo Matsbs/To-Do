@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Task.h"
+#import "NotesViewController.h"
 
 @class NewTaskViewController;
 
@@ -23,6 +24,7 @@
 @property (nonatomic, retain) IBOutlet UITextField *nameField;
 @property (nonatomic, retain) IBOutlet UITextField *dateField;
 @property (nonatomic, retain) IBOutlet UITextField *noteField;
+@property (nonatomic, retain) IBOutlet UITextField *categoryField;
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
 
