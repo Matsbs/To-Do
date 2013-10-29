@@ -15,5 +15,7 @@
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSMutableArray *taskArray;
 @property (nonatomic, retain) Task *task;
+@property (nonatomic, retain) NSMutableArray *notes;
+@property (nonatomic, retain) UITextField IBOutlet *noteField;
 
 @end

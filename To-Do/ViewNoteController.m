@@ -71,12 +71,12 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
-        return 3;
+        return 4;
     }else {
         return 1;
     }
@@ -94,13 +94,23 @@
         CGFloat cellHeight = cellRect.size.height;
         if (indexPath.section == 0) {
             if (indexPath.row == 0) {
-                self.nameField = [[UITextField alloc] initWithFrame:CGRectMake(15, 0, cellWidth,cellHeight)];
-                cell.textLabel.text = @"";
+                self.nameField = [[UITextField alloc] initWithFrame:CGRectMake(60, 0, cellWidth,cellHeight)];
+                cell.textLabel.text = @"Title";
                 self.nameField.text = self.task.name;
                 //self.nameField.delegate = self;
                 [cell.contentView addSubview:self.nameField];
                 //cell.textLabel.text = self.task.name;
             }else if (indexPath.row == 1){
+                cell.textLabel.text = @"Description:";
+                cell.detailTextLabel.text = @"";
+                self.descriptionField = [[UITextField alloc] initWithFrame:CGRectMake(60, 0, cellWidth, cellHeight)];
+                self.descriptionField.text = self.task.description;
+                //self.dateField.delegate = self;
+                [cell.contentView addSubview:self.descriptionField];
+                
+                //cell.textLabel.text = @"Test:";
+                //cell.detailTextLabel.text = self.task.date;
+            }else if (indexPath.row == 2){
                 cell.textLabel.text = @"Date:";
                 cell.detailTextLabel.text = @"";
                 self.dateField = [[UITextField alloc] initWithFrame:CGRectMake(60, 0, cellWidth, cellHeight)];
@@ -110,7 +120,7 @@
 
                 //cell.textLabel.text = @"Test:";
                 //cell.detailTextLabel.text = self.task.date;
-            }else if (indexPath.row == 2){
+            }else if (indexPath.row == 3){
                 cell.textLabel.text = @"Category:";
                 cell.detailTextLabel.text = @"";
                 self.categoryField = [[UITextField alloc] initWithFrame:CGRectMake(95, 0, cellWidth, cellHeight)];
@@ -120,8 +130,11 @@
                 //cell.textLabel.text = @"Test:";
                 //cell.detailTextLabel.text = self.task.category.name;
             }
-        }else if(indexPath.section == 1){
+        }else if(indexPath.section == 1 && self.isEditing == NO){
             cell.textLabel.text = @"View Notes";
+            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+        }else if(indexPath.section == 1 && self.isEditing == YES){
+            cell.textLabel.text = @"Manage Notes";
             cell.textLabel.textAlignment = NSTextAlignmentCenter;
         }else{
             cell.textLabel.text = @"Delete Task";
@@ -141,10 +154,13 @@
             cell.textLabel.text = self.task.name;
             self.nameField.hidden = YES;
         }else if (indexPath.row == 1){
+            cell.textLabel.text = self.task.description;
+            self.dateField.hidden = YES;
+        }else if (indexPath.row == 2){
             cell.textLabel.text = @"Date:";
             cell.detailTextLabel.text = self.task.date;
             self.dateField.hidden = YES;
-        }else if (indexPath.row == 2){
+        }else if (indexPath.row == 3){
             cell.textLabel.text = @"Category:";
             self.categoryField.hidden = YES;
             cell.detailTextLabel.text = self.task.category.name;
@@ -152,10 +168,6 @@
     }else if(indexPath.section == 1){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.text = @"View Notes";
-        cell.textLabel.textAlignment = NSTextAlignmentCenter;
-    }else{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.text = @"Delete Task";
         cell.textLabel.textAlignment = NSTextAlignmentCenter;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

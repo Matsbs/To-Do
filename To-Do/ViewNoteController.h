@@ -21,7 +21,7 @@
 
 @property (nonatomic, retain) IBOutlet UITextField *nameField;
 @property (nonatomic, retain) IBOutlet UITextField *dateField;
-@property (nonatomic, retain) IBOutlet UITextField *noteField;
+@property (nonatomic, retain) IBOutlet UITextField *descriptionField;
 @property (nonatomic, retain) IBOutlet UITextField *categoryField;
 @property (nonatomic, weak) id <ViewNoteControllerDelegate> delegate;
 @property (nonatomic, retain) Task *task;

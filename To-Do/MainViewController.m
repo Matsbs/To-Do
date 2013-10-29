@@ -35,13 +35,46 @@
     self.tableView.rowHeight = 60;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+
     [self.view addSubview:self.tableView];
+    
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 30)];
+//    UILabel *labelView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, screenWidth, 30)];
+//    [labelView setText: @"My Label"];
+//    [labelView setTextColor: [UIColor orangeColor]];
+//    [headerView addSubview:labelView];
+//    [self.view addSubview:headerView];
+    
     
     UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(newClicked:)] ;
     self.navigationItem.rightBarButtonItem = newButton;
     
+    UIBarButtonItem *delButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(delClicked:)] ;
+    self.navigationItem.rightBarButtonItems = @[newButton,delButton];
+    //self.navigationItem.rightBarButtonItem = newButton;
+    
      self.navigationItem.leftBarButtonItem = self.editButtonItem;
 }
+
+
+-(IBAction)delClicked:(id)sender{
+
+    //Delete all tasks
+}
+//For table header
+
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+//    
+//    UILabel *headerLabel = [[UILabel alloc]init];
+//    headerLabel.text = @"Task List";
+//    headerLabel.textColor = [UIColor blackColor];
+//    //headerLabel.shadowColor = [UIColor blackColor];
+//    headerLabel.font = [UIFont fontWithName:@"Helvetica" size:16];
+//    headerLabel.backgroundColor = [UIColor clearColor];
+//    headerLabel.textAlignment = NSTextAlignmentCenter;
+//    
+//    return headerLabel;
+//}
 
 - (void)addItemViewController:(NewTaskViewController *)controller didFinishEnteringItem:(Task *)item
 {

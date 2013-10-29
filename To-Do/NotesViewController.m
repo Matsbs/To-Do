@@ -15,6 +15,12 @@
 
 @implementation NotesViewController
 
+- (NSMutableArray* ) notes{
+    if(_notes == nil){
+        _notes = [[NSMutableArray alloc] init];
+    }
+    return _notes;
+}
 
 - (void)viewDidLoad
 {
@@ -36,6 +42,8 @@
 //    self.navigationItem.rightBarButtonItem = newButton;
     
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    
 }
 
 
@@ -50,7 +58,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    NSInteger count = self.taskArray.count;
+    NSInteger count = self.notes.count;
     if(self.editing) {
         count = count + 1;
     }
@@ -64,13 +72,19 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
-    if (indexPath.row < self.taskArray.count ) {
-        self.task= [self.taskArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = self.task.name;
-        cell.detailTextLabel.text = self.task.date;
+    if (indexPath.row < self.notes.count ) {
+        
+        cell.textLabel.text = [self.notes objectAtIndex:indexPath.row];
+        //cell.detailTextLabel.text = self.task.date;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
-        cell.textLabel.text = @"Add New Note";
+        //cell.textLabel.text = @"Add New Note";
+        
+        self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cell.bounds.size.width, cell.bounds.size.height)];
+        self.noteField.placeholder = @"Add New Note";
+        
+        [cell.contentView addSubview:self.noteField];
+        
         //cell.textLabel.textColor = [UIColor lightGrayColor];
         cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
@@ -98,7 +112,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row < self.taskArray.count ) {
+    if (indexPath.row < self.notes.count ) {
         return UITableViewCellEditingStyleDelete;
     } else {
         return UITableViewCellEditingStyleInsert;
@@ -107,14 +121,14 @@
 }
 
 -(void)setEditing:(BOOL)editing animated:(BOOL) animated {
-    if( editing != self.editing ) {
+    if(editing != self.editing ) {
         
         [super setEditing:editing animated:animated];
         [self.tableView setEditing:editing animated:animated];
         
         NSArray *indexes =
         [NSArray arrayWithObject:
-         [NSIndexPath indexPathForRow:self.taskArray.count inSection:0]];
+         [NSIndexPath indexPathForRow:self.notes.count inSection:0]];
         if (editing == YES ) {
             [self.tableView insertRowsAtIndexPaths:indexes
                                   withRowAnimation:UITableViewRowAnimationLeft];
@@ -132,13 +146,17 @@
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
  forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editing == UITableViewCellEditingStyleDelete ) {
-        [self.taskArray removeObjectAtIndex:indexPath.row];
+        [self.notes removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                          withRowAnimation:UITableViewRowAnimationLeft];
     }else{
-        NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
+        NSString *test = [[NSString alloc] init];
+        test = @"";
+        [self.notes addObject:test];
+        [self.tableView reloadData];
+        //NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
         //newTaskView.delegate = self;
-        [self.navigationController pushViewController:newTaskView animated:YES];
+        //[self.navigationController pushViewController:newTaskView animated:YES];
     }
 }
 
