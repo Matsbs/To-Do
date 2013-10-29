@@ -46,7 +46,7 @@
 //    [self.view addSubview:headerView];
     
     
-    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(newClicked:)] ;
+    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClicked:)] ;
     self.navigationItem.rightBarButtonItem = newButton;
     
     UIBarButtonItem *delButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(delClicked:)] ;
@@ -59,6 +59,8 @@
 
 -(IBAction)delClicked:(id)sender{
 
+    
+    //To be implemented
     //Delete all tasks
 }
 //For table header
