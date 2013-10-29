@@ -28,7 +28,6 @@
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;
 @property (nonatomic, retain) IBOutlet UIPickerView *pickerView;
 @property (nonatomic, retain) NSMutableArray *category;
-
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
 

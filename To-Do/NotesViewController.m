@@ -8,7 +8,6 @@
 
 #import "NotesViewController.h"
 
-
 @interface NotesViewController ()
 
 @end
@@ -25,12 +24,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    //[self loadFromMemory];
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
+    
     self.title = @"Notes";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
     self.tableView.rowHeight = 60;
@@ -38,18 +35,12 @@
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     
-//    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithTitle:@"New" style:UIBarButtonItemStylePlain target:self action:@selector(newClicked:)] ;
-//    self.navigationItem.rightBarButtonItem = newButton;
-    
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
-    
 }
 
 
 - (IBAction)newClicked:(id)sender {
     NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
-    //newTaskView.delegate = self;
     [self.navigationController pushViewController:newTaskView animated:YES];
 }
 
@@ -71,43 +62,16 @@
     if (cell == nil){
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
-    
     if (indexPath.row < self.notes.count ) {
-        
         cell.textLabel.text = [self.notes objectAtIndex:indexPath.row];
-        //cell.detailTextLabel.text = self.task.date;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
-        //cell.textLabel.text = @"Add New Note";
-        
         self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cell.bounds.size.width, cell.bounds.size.height)];
         self.noteField.placeholder = @"Add New Note";
-        
         [cell.contentView addSubview:self.noteField];
-        
-        //cell.textLabel.textColor = [UIColor lightGrayColor];
-        cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        //cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
-    
-    
     return cell;
-}
-
-- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    if ((indexPath.row < self.taskArray.count) && !self.editing) {
-//        ViewNoteController *viewNote = [[ViewNoteController alloc] init];
-//        viewNote.task = [self.taskArray objectAtIndex:indexPath.row];
-//        viewNote.delegate = self;
-//        [self.navigationController pushViewController:viewNote animated:YES];
-//    }else if ((indexPath.row == self.taskArray.count) && self.editing){
-//        NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
-//        newTaskView.delegate = self;
-//        [self.navigationController pushViewController:newTaskView animated:YES];
-//        //[self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-//        //reloadRowsAtIndexPaths:withRowAnimation:
-//    }
-    
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
@@ -117,18 +81,13 @@
     } else {
         return UITableViewCellEditingStyleInsert;
     }
-    
 }
 
 -(void)setEditing:(BOOL)editing animated:(BOOL) animated {
     if(editing != self.editing ) {
-        
         [super setEditing:editing animated:animated];
         [self.tableView setEditing:editing animated:animated];
-        
-        NSArray *indexes =
-        [NSArray arrayWithObject:
-         [NSIndexPath indexPathForRow:self.notes.count inSection:0]];
+        NSArray *indexes =[NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.notes.count inSection:0]];
         if (editing == YES ) {
             [self.tableView insertRowsAtIndexPaths:indexes
                                   withRowAnimation:UITableViewRowAnimationLeft];
@@ -137,10 +96,6 @@
                                   withRowAnimation:UITableViewRowAnimationLeft];
         }
     }
-    
-    //[super setEditing:editing animated:animated];
-    //[self.tableView setEditing:editing animated:animated];
-    //[self.tableView reloadData];
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
@@ -154,19 +109,19 @@
         test = @"";
         [self.notes addObject:test];
         [self.tableView reloadData];
-        //NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
-        //newTaskView.delegate = self;
-        //[self.navigationController pushViewController:newTaskView animated:YES];
     }
 }
 
 //Extra Functions
+
+- (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+}
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 @end
