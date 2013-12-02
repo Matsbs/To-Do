@@ -16,15 +16,17 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
+    self.dbManager = [[DBManager alloc]init];
+    [self.dbManager setDbPath];
+    
     self.title = @"New Task";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight+300) style:UITableViewStyleGrouped];
     self.tableView.scrollEnabled = YES;
-    self.tableView.rowHeight = 60;
+    self.tableView.rowHeight = 50;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
@@ -32,10 +34,7 @@
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(doneClicked:)] ;
     self.navigationItem.rightBarButtonItem = doneButton;
     
-    self.category = [[NSMutableArray alloc]initWithObjects:@"Cleaning",@"Reminder",@"Errand",@"Economy",@"Food",@"Activity",@"Work",@"School", nil];
-    self.task = [[Task alloc] init];
-    self.task.notes = [[NSMutableArray alloc]init];
-    self.task.note = [[Note alloc] init];
+    self.categories = [self.dbManager getAllCategories];
 }
 
 - (void) hideKeyboard{
@@ -45,12 +44,16 @@
 
 - (IBAction)doneClicked:(id)sender {
     if (self.nameField.text.length > 0) {
+        self.task = [[Task alloc]init];
         self.task.name = self.nameField.text;
         self.task.description = self.descriptionField.text;
-        self.task.category.name = self.categoryField.text;
-        //Call the addItemViewController in mainView to add task to taskArray
-        [self.delegate addItemViewController:self didFinishEnteringItem:self.task];
+        self.task.date = self.dateField.text;
+        self.task.category = self.categoryField.text;
+        [self.dbManager insertTask:self.task];
     }
+    [self.delegate reloadTableData:self];
+    NSLog(@"done clicked");
+    //[self.delegate addItemViewController:self didFinishEnteringItem:itemToPassBack];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
@@ -188,20 +191,28 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section==1) {
+        self.task = [[Task alloc]init];
+        self.task.name = self.nameField.text;
+        self.task.description = self.descriptionField.text;
+        self.task.date = self.dateField.text;
+        self.task.category = self.categoryField.text;
+        [self.dbManager insertTask:self.task];
         NotesViewController *noteView = [[NotesViewController alloc] init];
+        noteView.task = self.task;
+        noteView.canEdit = YES;
         [self.navigationController pushViewController:noteView animated:YES];
     }
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component{
     NSString *title;
-    title = [self.category objectAtIndex:row];
+    title = [[self.categories objectAtIndex:row] name];
     self.categoryField.text = title;
-    self.task.category.name = title;
+    //self.task.category.name = title;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return [self.category count];
+    return [self.categories count];
 }
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -210,7 +221,7 @@
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
     NSString *title;
-    title = [self.category objectAtIndex:row];
+    title = [[self.categories objectAtIndex:row] name];
     return title;
 }
 

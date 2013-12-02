@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E5718B4184CCA96004FE39C /* DBManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E5718B3184CCA96004FE39C /* DBManager.m */; };
+		4E5718B6184CCAEA004FE39C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E5718B5184CCAEA004FE39C /* libsqlite3.dylib */; };
 		4E5A7152181E6E05001ED6FF /* NotesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4E5A7151181E6E05001ED6FF /* NotesViewController.m */; };
 		4EA95BE918081E4F0061D231 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BE818081E4F0061D231 /* Foundation.framework */; };
 		4EA95BEB18081E4F0061D231 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BEA18081E4F0061D231 /* CoreGraphics.framework */; };
@@ -39,6 +41,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E5718B2184CCA96004FE39C /* DBManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBManager.h; sourceTree = "<group>"; };
+		4E5718B3184CCA96004FE39C /* DBManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBManager.m; sourceTree = "<group>"; };
+		4E5718B5184CCAEA004FE39C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		4E5A7150181E6E05001ED6FF /* NotesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotesViewController.h; sourceTree = "<group>"; };
 		4E5A7151181E6E05001ED6FF /* NotesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotesViewController.m; sourceTree = "<group>"; };
 		4EA95BE518081E4F0061D231 /* To-Do.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E5718B6184CCAEA004FE39C /* libsqlite3.dylib in Frameworks */,
 				4EA95BEB18081E4F0061D231 /* CoreGraphics.framework in Frameworks */,
 				4EA95BED18081E4F0061D231 /* UIKit.framework in Frameworks */,
 				4EA95BE918081E4F0061D231 /* Foundation.framework in Frameworks */,
@@ -117,6 +123,7 @@
 		4EA95BE718081E4F0061D231 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4E5718B5184CCAEA004FE39C /* libsqlite3.dylib */,
 				4EA95BE818081E4F0061D231 /* Foundation.framework */,
 				4EA95BEA18081E4F0061D231 /* CoreGraphics.framework */,
 				4EA95BEC18081E4F0061D231 /* UIKit.framework */,
@@ -134,6 +141,8 @@
 				4ED5BC55181A5FC000C1765A /* Note.m */,
 				4ED5BC5D181A61AD00C1765A /* Category1.h */,
 				4ED5BC5E181A61AD00C1765A /* Category1.m */,
+				4E5718B2184CCA96004FE39C /* DBManager.h */,
+				4E5718B3184CCA96004FE39C /* DBManager.m */,
 				4ED4C4141817D0FC006EB84F /* MainViewController.h */,
 				4ED4C4151817D0FC006EB84F /* MainViewController.m */,
 				4ED4C41C1817D0FC006EB84F /* ViewNoteController.h */,
@@ -227,6 +236,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Mats Sandvoll";
 				TargetAttributes = {
+					4EA95BE418081E4F0061D231 = {
+						DevelopmentTeam = 75WP5Y65NV;
+					};
 					4EA95BFF18081E4F0061D231 = {
 						TestTargetID = 4EA95BE418081E4F0061D231;
 					};
@@ -284,6 +296,7 @@
 				4ED5BC56181A5FC000C1765A /* Note.m in Sources */,
 				4ED4C4201817D0FC006EB84F /* Task.m in Sources */,
 				4E5A7152181E6E05001ED6FF /* NotesViewController.m in Sources */,
+				4E5718B4184CCA96004FE39C /* DBManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -402,6 +415,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "To-Do/To-Do-Prefix.pch";
 				INFOPLIST_FILE = "To-Do/To-Do-Info.plist";
@@ -415,6 +429,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "To-Do/To-Do-Prefix.pch";
 				INFOPLIST_FILE = "To-Do/To-Do-Info.plist";

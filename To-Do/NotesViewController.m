@@ -14,13 +14,6 @@
 
 @implementation NotesViewController
 
-- (NSMutableArray* ) notes{
-    if(_notes == nil){
-        _notes = [[NSMutableArray alloc] init];
-    }
-    return _notes;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -28,20 +21,19 @@
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
-    self.title = @"Notes";
+    self.dbManager = [[DBManager alloc]init];
+    [self.dbManager setDbPath];
+    self.notes = [self.dbManager getNotesByTask:self.task];
+    
+    self.title = self.task.name;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
     self.tableView.rowHeight = 60;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
-    
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
-}
-
-
-- (IBAction)newClicked:(id)sender {
-    NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
-    [self.navigationController pushViewController:newTaskView animated:YES];
+    if (self.canEdit==YES) {
+        self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -50,6 +42,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger count = self.notes.count;
+    NSLog(@"Count %ld", (long)count);
     if(self.editing) {
         count = count + 1;
     }
@@ -63,7 +56,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     if (indexPath.row < self.notes.count ) {
-        cell.textLabel.text = [self.notes objectAtIndex:indexPath.row];
+        cell.textLabel.text = [[self.notes objectAtIndex:indexPath.row] description];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
         self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cell.bounds.size.width, cell.bounds.size.height)];
@@ -101,13 +94,15 @@
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
  forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editing == UITableViewCellEditingStyleDelete ) {
+        [self.dbManager deleteNote:[self.notes objectAtIndex:indexPath.row]:self.task];
         [self.notes removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                          withRowAnimation:UITableViewRowAnimationLeft];
     }else{
-        NSString *test = [[NSString alloc] init];
-        test = @"";
-        [self.notes addObject:test];
+        Note *newNote = [[Note alloc]init];
+        newNote.description = self.noteField.text;
+        [self.dbManager insertNote:newNote :self.task];
+        self.notes = [self.dbManager getNotesByTask:self.task];
         [self.tableView reloadData];
     }
 }

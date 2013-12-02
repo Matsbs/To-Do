@@ -9,16 +9,16 @@
 #import <UIKit/UIKit.h>
 #import "Task.h"
 #import "NotesViewController.h"
+#import "DBManager.h"
 
 @class NewTaskViewController;
 
-//Protocol for communication to mainView
 @protocol NewTaskViewControllerDelegate <NSObject>
-- (void)addItemViewController:(NewTaskViewController *)controller didFinishEnteringItem:(Task *)item;
+- (void)reloadTableData:(NewTaskViewController *)controller;
 @end
 
 @interface NewTaskViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
-//Part of communication protocol
+
 @property (nonatomic, weak) id <NewTaskViewControllerDelegate> delegate;
 
 @property (nonatomic, retain) IBOutlet UITextField *nameField;
@@ -27,8 +27,9 @@
 @property (nonatomic, retain) IBOutlet UITextField *categoryField;
 @property (nonatomic, retain) IBOutlet UIDatePicker *picker;
 @property (nonatomic, retain) IBOutlet UIPickerView *pickerView;
-@property (nonatomic, retain) NSMutableArray *category;
+@property (nonatomic, retain) NSMutableArray *categories;
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
+@property (nonatomic, retain) DBManager *dbManager;
 
 @end

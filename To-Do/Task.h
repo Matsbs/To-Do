@@ -15,8 +15,9 @@
 @property (nonatomic, retain) NSString *name;
 @property (nonatomic, retain) NSString *date;
 @property (nonatomic, retain) NSString *description;
+@property (nonatomic, retain) NSString *category;
 @property (nonatomic, retain) NSMutableArray *notes;
-@property (nonatomic, retain) Category1 *category;
+@property (nonatomic, retain) Category1 *category1;
 @property (nonatomic, retain) Note *note;
 
 @end
