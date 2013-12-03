@@ -12,7 +12,7 @@
 #import "NewTaskViewController.h"
 #import "DBManager.h"
 
-@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,NewTaskViewControllerDelegate, ViewNoteControllerDelegate>
+@interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,NewTaskViewControllerDelegate>
 
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSMutableArray *tasks;

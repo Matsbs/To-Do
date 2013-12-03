@@ -42,7 +42,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSInteger count = self.notes.count;
-    NSLog(@"Count %ld", (long)count);
     if(self.editing) {
         count = count + 1;
     }
@@ -57,12 +56,12 @@
     }
     if (indexPath.row < self.notes.count ) {
         cell.textLabel.text = [[self.notes objectAtIndex:indexPath.row] description];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
         self.noteField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cell.bounds.size.width, cell.bounds.size.height)];
         self.noteField.placeholder = @"Add New Note";
-        [cell.contentView addSubview:self.noteField];
-        //cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if ([cell.contentView.subviews count]==0){
+            [cell.contentView addSubview:self.noteField];
+        }
     }
     return cell;
 }

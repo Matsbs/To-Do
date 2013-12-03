@@ -20,7 +20,6 @@
 @interface NewTaskViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 
 @property (nonatomic, weak) id <NewTaskViewControllerDelegate> delegate;
-
 @property (nonatomic, retain) IBOutlet UITextField *nameField;
 @property (nonatomic, retain) IBOutlet UITextField *dateField;
 @property (nonatomic, retain) IBOutlet UITextField *descriptionField;
@@ -31,5 +30,6 @@
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) DBManager *dbManager;
+@property bool isEditingExistingTask;
 
 @end

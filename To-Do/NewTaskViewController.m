@@ -23,13 +23,18 @@
     self.dbManager = [[DBManager alloc]init];
     [self.dbManager setDbPath];
     
-    self.title = @"New Task";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight+300) style:UITableViewStyleGrouped];
     self.tableView.scrollEnabled = YES;
     self.tableView.rowHeight = 50;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
+    
+    if (self.isEditingExistingTask) {
+        self.title = @"Edit Task";
+    }else{
+        self.title = @"New Task";
+    }
     
     UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(doneClicked:)] ;
     self.navigationItem.rightBarButtonItem = doneButton;
@@ -43,21 +48,36 @@
 }
 
 - (IBAction)doneClicked:(id)sender {
-    if (self.nameField.text.length > 0) {
+    if (self.isEditingExistingTask==YES) {
+        NSMutableArray *notes = [[NSMutableArray alloc]init];
+        notes = [self.dbManager getNotesByTask:self.task];
+        [self.dbManager deleteAllNotesToTask:self.task];
+        [self.dbManager deleteTask:self.task];
         self.task = [[Task alloc]init];
         self.task.name = self.nameField.text;
         self.task.description = self.descriptionField.text;
-        self.task.date = self.dateField.text;
         self.task.category = self.categoryField.text;
+        self.task.date = self.dateField.text;
         [self.dbManager insertTask:self.task];
+        for(int i=0; i<notes.count; i++){
+            [self.dbManager insertNote:[notes objectAtIndex:i] :self.task];
+        }
+        self.delegate = [self.navigationController.viewControllers objectAtIndex:0];
+    }else{
+        if (self.nameField.text.length > 0) {
+            self.task = [[Task alloc]init];
+            self.task.name = self.nameField.text;
+            self.task.description = self.descriptionField.text;
+            self.task.date = self.dateField.text;
+            self.task.category = self.categoryField.text;
+            [self.dbManager insertTask:self.task];
+        }
     }
     [self.delegate reloadTableData:self];
-    NSLog(@"done clicked");
-    //[self.delegate addItemViewController:self didFinishEnteringItem:itemToPassBack];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
--( IBAction) resignPicker:(id)sender {
+-( IBAction)resignPicker:(id)sender {
     [self.dateField resignFirstResponder];
     [self.categoryField resignFirstResponder];
 }
@@ -86,17 +106,25 @@
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             self.nameField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth,cellHeight)];
-            self.nameField.placeholder = @"Title";
+            if (self.isEditingExistingTask==YES) {
+                self.nameField.text = self.task.name;
+            }else{
+                self.nameField.placeholder = @"Title";
+            }
             self.nameField.delegate = self;
             [cell.contentView addSubview:self.nameField];
         }else if(indexPath.row == 1){
             self.descriptionField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
-            self.descriptionField.placeholder = @"Description";
+            if (self.isEditingExistingTask==YES) {
+                self.descriptionField.text = self.task.debugDescription;
+            }else{
+                self.descriptionField.placeholder = @"Description";
+            }
             self.descriptionField.delegate = self;
             [cell.contentView addSubview:self.descriptionField];
         }else if(indexPath.row == 2){
             cell.textLabel.text = @"Date:";
-            self.dateField = [[UITextField alloc] initWithFrame:CGRectMake(60, 10, cellWidth, cellHeight)];
+            self.dateField = [[UITextField alloc] initWithFrame:CGRectMake(60, 4, cellWidth, cellHeight)];
             self.picker = [[UIDatePicker alloc]init];
             self.picker.datePickerMode = UIDatePickerModeDate;
             [self.picker addTarget:self action:@selector(LabelChange:) forControlEvents:UIControlEventValueChanged];
@@ -119,13 +147,16 @@
             [barItems addObject:doneBtn];
             
             [pickerToolbar setItems:barItems animated:YES];
+            if (self.isEditingExistingTask==YES) {
+                self.dateField.text = self.task.date;
+            }
             self.dateField.delegate= self;
             [self.dateField setInputView:self.picker];
             self.dateField.inputAccessoryView = pickerToolbar;
             [cell.contentView addSubview:self.dateField];
         }else if(indexPath.row == 3){
             cell.textLabel.text = @"Category:";
-            self.categoryField = [[UITextField alloc] initWithFrame:CGRectMake(100, 10, self.view.frame.size.width, 40)];
+            self.categoryField = [[UITextField alloc] initWithFrame:CGRectMake(100, 7, self.view.frame.size.width, 40)];
             
            self.pickerView = [[UIPickerView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 100)];
             self.pickerView.delegate = self;
@@ -150,6 +181,9 @@
             [barItems addObject:doneBtn];
             
             [pickerToolbar setItems:barItems animated:YES];
+            if (self.isEditingExistingTask==YES) {
+                self.categoryField.text = self.task.category;
+            }
             self.pickerView.delegate = self;
             [self.categoryField setInputView:self.pickerView];
             self.categoryField.inputAccessoryView=pickerToolbar;
@@ -157,8 +191,13 @@
         }
     }else if (indexPath.section == 1){
         if (indexPath.row == 0){
-            cell.textLabel.text = @"Add Notes";
-            cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            if (self.isEditingExistingTask==YES) {
+                cell.textLabel.text = @"Manage Notes";
+                cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            }else{
+                cell.textLabel.text = @"Add Notes";
+                cell.textLabel.textAlignment = NSTextAlignmentCenter;
+            }
         }
     }
     return cell;
@@ -171,7 +210,6 @@
     NSString *dateString = [dateFormatter1 stringFromDate: self.picker.date];
     NSLog(@"Date:,%@",dateString);
     self.dateField.text = dateString;
-    self.task.date = dateString;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
@@ -191,24 +229,25 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section==1) {
-        self.task = [[Task alloc]init];
-        self.task.name = self.nameField.text;
-        self.task.description = self.descriptionField.text;
-        self.task.date = self.dateField.text;
-        self.task.category = self.categoryField.text;
-        [self.dbManager insertTask:self.task];
         NotesViewController *noteView = [[NotesViewController alloc] init];
-        noteView.task = self.task;
         noteView.canEdit = YES;
+        if (self.isEditingExistingTask==YES){
+            noteView.task = self.task;
+        }else{
+            self.task = [[Task alloc]init];
+            self.task.name = self.nameField.text;
+            self.task.description = self.descriptionField.text;
+            self.task.date = self.dateField.text;
+            self.task.category = self.categoryField.text;
+            [self.dbManager insertTask:self.task];
+            noteView.task = self.task;
+        }
         [self.navigationController pushViewController:noteView animated:YES];
     }
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component{
-    NSString *title;
-    title = [[self.categories objectAtIndex:row] name];
-    self.categoryField.text = title;
-    //self.task.category.name = title;
+    self.categoryField.text = [[self.categories objectAtIndex:row] name];
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
@@ -220,9 +259,7 @@
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    NSString *title;
-    title = [[self.categories objectAtIndex:row] name];
-    return title;
+    return [[self.categories objectAtIndex:row] name];
 }
 
 - (CGFloat)pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {

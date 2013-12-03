@@ -17,86 +17,52 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSData *allCoursesData = [[NSData alloc] initWithContentsOfURL:
-                              [NSURL URLWithString:@"http://demo--1.azurewebsites.net/JSON.php?f=getToDo"]];
-    NSError *error;
-    
-    NSMutableArray *arrayJson = [NSJSONSerialization JSONObjectWithData:allCoursesData options:NSJSONReadingMutableContainers|NSJSONReadingMutableLeaves error:&error];
-    
-    if( error )
-    {
-        NSLog(@"%@", [error localizedDescription]);
-    }
-    else {
-        NSLog(@"No error");
-        for (NSDictionary *data in arrayJson) {
-            NSString *test = [data objectForKey:@"Title"];
-            NSLog(@"Test: %@", test);
-        }
-        //NSArray *idTag = allCourses[@""];
-        //NSLog(@"Test %@", [arrayJson ])
-        //NSLog(@"All keys %@",[arrayJson valueForKey:@"Title" ]);
-        //for (NSDictionary *theCourse in idTag )
-//        {
-//            NSLog(@"----");
-//            NSLog(@"Title: %@", theCourse[@"title"] );
-//            NSLog(@"----");
-//        }
-    }
-    
-    self.dbManager = [[DBManager alloc]init];
-    [self.dbManager initDatabase];
-    
-    Category1 *newCat = [[Category1 alloc] init];
-    newCat.name = @"Cleaning";
-    [self.dbManager insertCategory:newCat];
-    
-    Task *newTask = [[Task alloc] init];
-    newTask.name = @"Title";
-    newTask.description = @"Description";
-    newTask.date = @"22/10-2013";
-    newTask.category = newCat.name;
-    [self.dbManager insertTask:newTask];
-    
-    Note *newNote = [[Note alloc] init];
-    newNote.description = @"This is a description";
-    [self.dbManager insertNote:newNote :newTask];
-    
-    NSLog(@"Categories %@",[[[self.dbManager getAllCategories] objectAtIndex:0] name]);
-    NSLog(@"Tasks %@",[[[self.dbManager getAllTasks] objectAtIndex:0] name]);
-    NSLog(@"Notes %@",[[[self.dbManager getNotesByTask:newTask] objectAtIndex:0] description]);
-    
-    [self.dbManager deleteNote:newNote :newTask];
-     NSLog(@"Notes %lu",(unsigned long)[[self.dbManager getNotesByTask:newTask] count]);
-    [self.dbManager deleteTask:newTask];
-     NSLog(@"task %lu",(unsigned long)[[self.dbManager getAllTasks] count]);
-    
-    NSLog(@"Cat %lu",(unsigned long)[[self.dbManager getAllCategories] count]);
-    
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
+    self.dbManager = [[DBManager alloc]init];
+    [self.dbManager initDatabase];
     self.tasks = [self.dbManager getAllTasks];
     
-    self.title = @"Tasks";
+    self.title = @"To-Do";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
     self.tableView.rowHeight = 50;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     [self.view addSubview:self.tableView];
     
-    UIBarButtonItem *newButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newClicked:)] ;
+    UIBarButtonItem *syncButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(syncClicked:)] ;
     UIBarButtonItem *delButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash target:self action:@selector(delClicked:)] ;
     NSMutableArray *barButtons = [[NSMutableArray alloc]init];
-    [barButtons addObject:newButton];
+    [barButtons addObject:syncButton];
     [barButtons addObject:delButton];
     self.navigationItem.rightBarButtonItems = barButtons;
-    
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
 }
 
 - (void)reloadTableData:(NewTaskViewController *)controller{
+    self.tasks = [self.dbManager getAllTasks];
+    [self.tableView reloadData];
+}
+
+- (IBAction)syncClicked:(id)sender{
+    NSData *dataFromServer = [[NSData alloc] initWithContentsOfURL:
+                              [NSURL URLWithString:@"http://demo--1.azurewebsites.net/JSON.php?f=getToDo"]];
+    NSError *error;
+    NSMutableArray *arrayJson = [NSJSONSerialization JSONObjectWithData:dataFromServer options:NSJSONReadingMutableContainers|NSJSONReadingMutableLeaves error:&error];
+    if(error){
+        NSLog(@"%@", [error localizedDescription]);
+    }
+    else {
+        for (NSDictionary *data in arrayJson) {
+            Task *newTask = [[Task alloc] init];
+            newTask.name = [data objectForKey:@"Title"];
+            newTask.description = [data objectForKey:@"Description"];
+            newTask.date = [data objectForKey:@"Date"];
+            [self.dbManager insertTask:newTask];
+        }
+    }
     self.tasks = [self.dbManager getAllTasks];
     [self.tableView reloadData];
 }
@@ -108,9 +74,17 @@
 }
 
 -(IBAction)delClicked:(id)sender{
-    [self.dbManager deleteAllTasks];
-    self.tasks = [self.dbManager getAllTasks];
-    [self.tableView reloadData];
+    NSString *alertTitle = [[NSString alloc]initWithFormat:@"Are you sure you want to delete all tasks?"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete Tasks", nil ];
+    [alert show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1) {
+        [self.dbManager deleteAllTasks];
+        self.tasks = [self.dbManager getAllTasks];
+        [self.tableView reloadData];
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -134,11 +108,12 @@
     if (indexPath.row < self.tasks.count ) {
         self.task= [self.tasks objectAtIndex:indexPath.row];
         cell.textLabel.text = self.task.name;
+        cell.detailTextLabel.text = self.task.description;
         cell.detailTextLabel.text = self.task.date;
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     } else {
         cell.textLabel.text = @"Add New Task";
-        //cell.textLabel.textColor = [UIColor lightGrayColor];
+        cell.detailTextLabel.text = @"";
         cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     return cell;
@@ -149,7 +124,6 @@
     if ((indexPath.row < self.tasks.count) && !self.editing) {
         ViewNoteController *viewNote = [[ViewNoteController alloc] init];
         viewNote.task = [self.tasks objectAtIndex:indexPath.row];
-        viewNote.delegate = self;
         [self.navigationController pushViewController:viewNote animated:YES];
     }else if ((indexPath.row == self.tasks.count) && self.editing){
         NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
@@ -158,8 +132,7 @@
     }
 }
 
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView
-           editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row < self.tasks.count ) {
         return UITableViewCellEditingStyleDelete;
     } else {
@@ -171,33 +144,27 @@
     if( editing != self.editing ) {
         [super setEditing:editing animated:animated];
         [self.tableView setEditing:editing animated:animated];
-        NSArray *indexes =
-        [NSArray arrayWithObject:
-        [NSIndexPath indexPathForRow:self.tasks.count inSection:0]];
+        NSArray *indexes = [NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.tasks.count inSection:0]];
         if (editing == YES ) {
-            [self.tableView insertRowsAtIndexPaths:indexes
-                             withRowAnimation:UITableViewRowAnimationLeft];
+            [self.tableView insertRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationLeft];
         } else {
-            [self.tableView deleteRowsAtIndexPaths:indexes
-                             withRowAnimation:UITableViewRowAnimationLeft];
+            [self.tableView deleteRowsAtIndexPaths:indexes withRowAnimation:UITableViewRowAnimationLeft];
         }
     }
 }
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
  forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(editing == UITableViewCellEditingStyleDelete ) {
+    if(editing == UITableViewCellEditingStyleDelete) {
         [self.dbManager deleteAllNotesToTask:[self.tasks objectAtIndex:indexPath.row]];
         [self.dbManager deleteTask:[self.tasks objectAtIndex:indexPath.row]];
         [self.tasks removeObjectAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-                  withRowAnimation:UITableViewRowAnimationLeft];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     }else{
         NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
         self.editing = NO;
         newTaskView.delegate = self;
         [self.navigationController pushViewController:newTaskView animated:YES];
-        
     }
 }
 
