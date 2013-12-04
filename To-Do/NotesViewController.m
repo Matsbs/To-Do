@@ -63,6 +63,7 @@
             [cell.contentView addSubview:self.noteField];
         }
     }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
