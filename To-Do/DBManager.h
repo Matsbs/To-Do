@@ -10,6 +10,7 @@
 #import <sqlite3.h>
 #import "Task.h"
 #import "Note.h"
+#import "LogManager.h"
 
 @interface DBManager : NSObject
 
@@ -28,6 +29,8 @@
 - (NSMutableArray*)getAllCategories;
 - (NSMutableArray*)getNotesByTask: (Task *)task;
 - (void)deleteAllNotesToTask:(Task *)task;
+- (NSInteger)getTaskID:(Task *)task;
+- (NSInteger)getNoteID:(Note *)note;
 
 
 @end

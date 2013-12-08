@@ -27,12 +27,12 @@
             if (sqlite3_exec(_TASKDB, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK){
                 //_status.text = @"Failed to create table";
             }
-            sql_stmt ="CREATE TABLE IF NOT EXISTS TASKS (NAME TEXT PRIMARY KEY, DESCRIPTION TEXT, DATE TEXT, CATEGORY TEXT, FOREIGN KEY(CATEGORY) REFERENCES CATEGORIES(NAME))";
+            sql_stmt ="CREATE TABLE IF NOT EXISTS TASKS (ID INTEGER PRIMARY KEY, NAME TEXT, DESCRIPTION TEXT, DATE TEXT, CATEGORY TEXT, FOREIGN KEY(CATEGORY) REFERENCES CATEGORIES(NAME))";
             if (sqlite3_exec(_TASKDB, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK){
                 //_status.text = @"Failed to create table";
                 NSLog(@"%s",sqlite3_errmsg(_TASKDB));
             }
-            sql_stmt = "CREATE TABLE IF NOT EXISTS NOTES (DESCRIPTION TEXT PRIMARY KEY, TASK TEXT, FOREIGN KEY(TASK) REFERENCES TASKS(NAME))";
+            sql_stmt = "CREATE TABLE IF NOT EXISTS NOTES (ID PRIMARY KEY, DESCRIPTION TEXT, TASK TEXT, FOREIGN KEY(TASK) REFERENCES TASKS(NAME))";
             if (sqlite3_exec(_TASKDB, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK){
                 //_status.text = @"Failed to create table";
             }
@@ -171,10 +171,11 @@
         if (sqlite3_prepare_v2(_TASKDB,query_stmt, -1, &statement, NULL) == SQLITE_OK){
             while (sqlite3_step(statement) == SQLITE_ROW){
                 Task *newTask = [[Task alloc]init];
-                newTask.name = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
-                newTask.description = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                newTask.date = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                newTask.category = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                newTask.taskID = sqlite3_column_int(statement, 0);
+                newTask.name = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                newTask.description = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                newTask.date = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                newTask.category = [[NSString alloc]initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
                 [Tasks addObject:newTask];
             }
             sqlite3_finalize(statement);
@@ -248,6 +249,52 @@
         sqlite3_finalize(statement);
         sqlite3_close(_TASKDB);
     }
+}
+
+- (NSInteger)getTaskID:(Task *)task{
+    sqlite3_stmt *statement;
+    NSInteger taskID;
+    taskID = 0;
+    const char *dbpath = [_databasePath UTF8String];
+    if (sqlite3_open(dbpath, &_TASKDB) == SQLITE_OK){
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT (ID) FROM TASKS WHERE (name) = \"%@\"", task.name];
+        const char *query_stmt = [querySQL UTF8String];
+        if (sqlite3_prepare_v2(_TASKDB,query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            if (sqlite3_step(statement) == SQLITE_ROW){
+                taskID = sqlite3_column_int(statement, 0);
+                NSLog(@"TaskID returned: %ld",(long)taskID);
+            }else{
+                NSLog(@"%@",task.name);
+                NSLog(@"%s",sqlite3_errmsg(_TASKDB));
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(_TASKDB);
+    }
+    return taskID;
+}
+
+- (NSInteger)getNoteID:(Note *)note{
+    sqlite3_stmt *statement;
+    NSInteger noteID;
+    noteID = 0;
+    const char *dbpath = [_databasePath UTF8String];
+    if (sqlite3_open(dbpath, &_TASKDB) == SQLITE_OK){
+        NSString *querySQL = [NSString stringWithFormat:@"SELECT (ID) FROM NOTES WHERE (description) = \"%@\"", note.description];
+        const char *query_stmt = [querySQL UTF8String];
+        if (sqlite3_prepare_v2(_TASKDB,query_stmt, -1, &statement, NULL) == SQLITE_OK){
+            if (sqlite3_step(statement) == SQLITE_ROW){
+                noteID = sqlite3_column_int(statement, 0);
+                NSLog(@"NoteID returned: %ld",(long)noteID);
+            }else{
+                NSLog(@"%@",note.description);
+                NSLog(@"%s",sqlite3_errmsg(_TASKDB));
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(_TASKDB);
+    }
+    return noteID;
 }
 
 @end

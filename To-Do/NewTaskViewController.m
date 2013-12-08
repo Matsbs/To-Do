@@ -48,6 +48,7 @@
 }
 
 - (IBAction)doneClicked:(id)sender {
+     LogManager *logMan = [[LogManager alloc] init];
     if (self.isEditingExistingTask==YES) {
         NSMutableArray *notes = [[NSMutableArray alloc]init];
         notes = [self.dbManager getNotesByTask:self.task];
@@ -59,6 +60,7 @@
         self.task.category = self.categoryField.text;
         self.task.date = self.dateField.text;
         [self.dbManager insertTask:self.task];
+        [logMan writeToLog:UpdateTask :self.task];
         for(int i=0; i<notes.count; i++){
             [self.dbManager insertNote:[notes objectAtIndex:i] :self.task];
         }
@@ -71,6 +73,8 @@
             self.task.date = self.dateField.text;
             self.task.category = self.categoryField.text;
             [self.dbManager insertTask:self.task];
+            [self.dbManager getTaskID:self.task];
+            [logMan writeToLog:CreateTask :self.task];
         }
     }
     [self.delegate reloadTableData:self];

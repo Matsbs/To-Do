@@ -11,5 +11,6 @@
 @interface Note : NSObject
 
 @property (nonatomic, retain) NSString *description;
+@property (nonatomic) NSInteger noteID;
 
 @end

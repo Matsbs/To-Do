@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *category;
 @property (nonatomic, retain) NSMutableArray *notes;
+@property (nonatomic) NSInteger taskID;
 
 @end

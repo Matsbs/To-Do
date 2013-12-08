@@ -11,6 +11,7 @@
 #import "ViewNoteController.h"
 #import "NewTaskViewController.h"
 #import "DBManager.h"
+#import "LogManager.h"
 
 @interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate,NewTaskViewControllerDelegate>
 

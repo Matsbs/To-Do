@@ -10,6 +10,7 @@
 #import "Task.h"
 #import "NewTaskViewController.h"
 #import "DBManager.h"
+#import "LogManager.h"
 
 @interface NotesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 

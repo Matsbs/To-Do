@@ -93,8 +93,11 @@
 
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
  forRowAtIndexPath:(NSIndexPath *)indexPath {
+    LogManager *logMan = [[LogManager alloc]init];
     if(editing == UITableViewCellEditingStyleDelete ) {
         [self.dbManager deleteNote:[self.notes objectAtIndex:indexPath.row]:self.task];
+        [logMan writeToLog:DeleteNote:[self.notes objectAtIndex:indexPath.row]];
+        
         [self.notes removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                          withRowAnimation:UITableViewRowAnimationLeft];
@@ -102,6 +105,12 @@
         Note *newNote = [[Note alloc]init];
         newNote.description = self.noteField.text;
         [self.dbManager insertNote:newNote :self.task];
+        Task *task = [[Task alloc] init];
+        task.taskID = [self.dbManager getTaskID:self.task];
+        task.description = newNote.description;
+        
+        [logMan writeToLog:CreateNote :task];
+        
         self.notes = [self.dbManager getNotesByTask:self.task];
         [self.tableView reloadData];
     }

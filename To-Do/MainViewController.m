@@ -39,6 +39,10 @@
     [barButtons addObject:delButton];
     self.navigationItem.rightBarButtonItems = barButtons;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
+    
+    
+    //LogManager *logMan = [[LogManager alloc] init];
+    //[logMan readLog];
 }
 
 - (void)reloadTableData:(NewTaskViewController *)controller{
@@ -47,6 +51,11 @@
 }
 
 - (IBAction)syncClicked:(id)sender{
+    //PUSH TO SERVER
+//    LogManager *logMan = [[LogManager alloc]init];
+//    if ([logMan logFileHasContent]) {
+//        [logMan readLog];
+//    }
     NSData *dataFromServer = [[NSData alloc] initWithContentsOfURL:
                               [NSURL URLWithString:@"http://demo--1.azurewebsites.net/JSON.php?f=getToDo"]];
     NSError *error;
@@ -66,6 +75,8 @@
     self.tasks = [self.dbManager getAllTasks];
     [self.tableView reloadData];
 }
+
+
 
 - (IBAction)newClicked:(id)sender {
     NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
@@ -158,6 +169,9 @@
     if(editing == UITableViewCellEditingStyleDelete) {
         [self.dbManager deleteAllNotesToTask:[self.tasks objectAtIndex:indexPath.row]];
         [self.dbManager deleteTask:[self.tasks objectAtIndex:indexPath.row]];
+        LogManager *logMan = [[LogManager alloc]init];
+        [logMan writeToLog:DeleteTask :[self.tasks objectAtIndex:indexPath.row]];
+        
         [self.tasks removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
     }else{
