@@ -6,14 +6,14 @@
 //  Copyright (c) 2013 Mats Sandvoll. All rights reserved.
 //
 
-#import "ViewNoteController.h"
+#import "ViewTaskController.h"
 #import "NotesViewController.h"
 
-@interface ViewNoteController ()
+@interface ViewTaskController ()
 
 @end
 
-@implementation ViewNoteController
+@implementation ViewTaskController
 
 - (void)viewDidLoad
 {

@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Note.h"
 #import "Category1.h"
+#import "Note.h"
 
 @interface Task : NSObject
 
@@ -17,6 +17,8 @@
 @property (nonatomic, retain) NSString *description;
 @property (nonatomic, retain) NSString *category;
 @property (nonatomic, retain) NSMutableArray *notes;
-@property (nonatomic) NSInteger taskID;
+@property int taskID;
+@property int externalTaskID;
+
 
 @end

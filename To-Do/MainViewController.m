@@ -39,10 +39,6 @@
     [barButtons addObject:delButton];
     self.navigationItem.rightBarButtonItems = barButtons;
     self.navigationItem.leftBarButtonItem = self.editButtonItem;
-    
-    
-    //LogManager *logMan = [[LogManager alloc] init];
-    //[logMan readLog];
 }
 
 - (void)reloadTableData:(NewTaskViewController *)controller{
@@ -52,10 +48,10 @@
 
 - (IBAction)syncClicked:(id)sender{
     //PUSH TO SERVER
-//    LogManager *logMan = [[LogManager alloc]init];
-//    if ([logMan logFileHasContent]) {
-//        [logMan readLog];
-//    }
+    LogManager *logMan = [[LogManager alloc]init];
+    if ([logMan logFileHasContent]) {
+        [logMan readLog];
+    }
     NSData *dataFromServer = [[NSData alloc] initWithContentsOfURL:
                               [NSURL URLWithString:@"http://demo--1.azurewebsites.net/JSON.php?f=getToDo"]];
     NSError *error;
@@ -64,18 +60,20 @@
         NSLog(@"%@", [error localizedDescription]);
     }
     else {
+        [self.tasks removeAllObjects];
+        [self.dbManager deleteAllTasks];
         for (NSDictionary *data in arrayJson) {
             Task *newTask = [[Task alloc] init];
             newTask.name = [data objectForKey:@"Title"];
             newTask.description = [data objectForKey:@"Description"];
             newTask.date = [data objectForKey:@"Date"];
-            [self.dbManager insertTask:newTask];
+            newTask.externalTaskID = [NSString stringWithFormat:@"%@",[data objectForKey:@"id"]].intValue;
+            newTask.taskID = [self.dbManager insertTask:newTask];
         }
     }
     self.tasks = [self.dbManager getAllTasks];
     [self.tableView reloadData];
 }
-
 
 
 - (IBAction)newClicked:(id)sender {
@@ -133,9 +131,9 @@
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     if ((indexPath.row < self.tasks.count) && !self.editing) {
-        ViewNoteController *viewNote = [[ViewNoteController alloc] init];
-        viewNote.task = [self.tasks objectAtIndex:indexPath.row];
-        [self.navigationController pushViewController:viewNote animated:YES];
+        ViewTaskController *viewTask = [[ViewTaskController alloc] init];
+        viewTask.task = [self.tasks objectAtIndex:indexPath.row];
+        [self.navigationController pushViewController:viewTask animated:YES];
     }else if ((indexPath.row == self.tasks.count) && self.editing){
         NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
         newTaskView.delegate = self;

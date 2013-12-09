@@ -10,7 +10,7 @@
 #import "Task.h"
 #import "DBManager.h"
 
-@interface ViewNoteController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface ViewTaskController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;

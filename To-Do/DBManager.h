@@ -19,18 +19,19 @@
 
 - (void)initDatabase;
 - (void)setDbPath;
-- (void)insertTask:(Task *)task;
-- (void)insertNote:(Note *)note : (Task *)task;
+- (int)insertTask:(Task *)task;
+- (int)insertNote:(Note *)note;
 - (void)insertCategory:(Category1 *)category;
 - (void)deleteTask:(Task *)task;
-- (void)deleteNote:(Note *)note : (Task *)task;
+- (void)deleteNote:(Note *)note;
 - (void)deleteAllTasks;
 - (NSMutableArray*)getAllTasks;
 - (NSMutableArray*)getAllCategories;
 - (NSMutableArray*)getNotesByTask: (Task *)task;
 - (void)deleteAllNotesToTask:(Task *)task;
-- (NSInteger)getTaskID:(Task *)task;
-- (NSInteger)getNoteID:(Note *)note;
+- (void)updateTask:(Task *)task;
+//- (NSInteger)getTaskID:(Task *)task;
+//- (NSInteger)getNoteID:(Note *)note;
 
 
 @end

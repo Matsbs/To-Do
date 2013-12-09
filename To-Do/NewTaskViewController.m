@@ -50,20 +50,19 @@
 - (IBAction)doneClicked:(id)sender {
      LogManager *logMan = [[LogManager alloc] init];
     if (self.isEditingExistingTask==YES) {
-        NSMutableArray *notes = [[NSMutableArray alloc]init];
-        notes = [self.dbManager getNotesByTask:self.task];
-        [self.dbManager deleteAllNotesToTask:self.task];
-        [self.dbManager deleteTask:self.task];
-        self.task = [[Task alloc]init];
+//        NSMutableArray *notes = [[NSMutableArray alloc]init];
+//        notes = [self.dbManager getNotesByTask:self.task];
+//        [self.dbManager deleteAllNotesToTask:self.task];
+//        [self.dbManager deleteTask:self.task];
         self.task.name = self.nameField.text;
         self.task.description = self.descriptionField.text;
         self.task.category = self.categoryField.text;
         self.task.date = self.dateField.text;
-        [self.dbManager insertTask:self.task];
+        [self.dbManager updateTask:self.task];
         [logMan writeToLog:UpdateTask :self.task];
-        for(int i=0; i<notes.count; i++){
-            [self.dbManager insertNote:[notes objectAtIndex:i] :self.task];
-        }
+//        for(int i=0; i<notes.count; i++){
+//            [self.dbManager insertNote:[notes objectAtIndex:i]];
+//        }
         self.delegate = [self.navigationController.viewControllers objectAtIndex:0];
     }else{
         if (self.nameField.text.length > 0) {
@@ -72,8 +71,7 @@
             self.task.description = self.descriptionField.text;
             self.task.date = self.dateField.text;
             self.task.category = self.categoryField.text;
-            [self.dbManager insertTask:self.task];
-            [self.dbManager getTaskID:self.task];
+            self.task.taskID = [self.dbManager insertTask:self.task];
             [logMan writeToLog:CreateTask :self.task];
         }
     }
@@ -87,14 +85,23 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (self.isEditingExistingTask) {
+        return 2;
+    }else{
+        return 1;
+    }
     return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if (section == 0) {
+    if (self.isEditingExistingTask) {
+        if (section == 0) {
+            return 4;
+        }else {
+            return 1;
+        }
+    }else{
         return 4;
-    }else {
-        return 1;
     }
 }
 
@@ -117,6 +124,7 @@
             }
             self.nameField.delegate = self;
             [cell.contentView addSubview:self.nameField];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }else if(indexPath.row == 1){
             self.descriptionField = [[UITextField alloc] initWithFrame:CGRectMake(15, 10, cellWidth, cellHeight)];
             if (self.isEditingExistingTask==YES) {
@@ -199,8 +207,8 @@
                 cell.textLabel.text = @"Manage Notes";
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
             }else{
-                cell.textLabel.text = @"Add Notes";
-                cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                //cell.textLabel.text = @"Add Notes";
+                //cell.textLabel.textAlignment = NSTextAlignmentCenter;
             }
         }
     }
@@ -232,22 +240,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (indexPath.section==1) {
-        NotesViewController *noteView = [[NotesViewController alloc] init];
-        noteView.canEdit = YES;
-        if (self.isEditingExistingTask==YES){
-            noteView.task = self.task;
-        }else{
-            self.task = [[Task alloc]init];
-            self.task.name = self.nameField.text;
-            self.task.description = self.descriptionField.text;
-            self.task.date = self.dateField.text;
-            self.task.category = self.categoryField.text;
-            [self.dbManager insertTask:self.task];
-            noteView.task = self.task;
-        }
-        [self.navigationController pushViewController:noteView animated:YES];
-    }
+//    if (indexPath.section==1) {
+//        NotesViewController *noteView = [[NotesViewController alloc] init];
+//        noteView.canEdit = YES;
+//        if (self.isEditingExistingTask==YES){
+//            noteView.task = self.task;
+//        }else{
+////            self.task = [[Task alloc]init];
+////            self.task.name = self.nameField.text;
+////            self.task.description = self.descriptionField.text;
+////            self.task.date = self.dateField.text;
+////            self.task.category = self.categoryField.text;
+////            [self.dbManager insertTask:self.task];
+////            noteView.task = self.task;
+//        }
+//        [self.navigationController pushViewController:noteView animated:YES];
+//    }
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component{

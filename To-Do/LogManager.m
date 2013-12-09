@@ -17,12 +17,21 @@
         NSString* logfile = [documentsPath stringByAppendingPathComponent:@"log.txt"];
         BOOL logfileExists = [[NSFileManager defaultManager] fileExistsAtPath:logfile];
         if (!logfileExists) {
-            NSLog(@"File not exist");
+            NSLog(@"Log file not exist");
             NSString *string = [[NSString alloc]initWithFormat:@"%@",query];
             [string writeToFile:logfile atomically:YES encoding:NSUTF8StringEncoding error:NULL];
         }else{
             NSFileHandle *fileHandler = [NSFileHandle fileHandleForUpdatingAtPath:logfile];
-            NSString *string = [NSString stringWithFormat:@"\n%@", query];
+            NSFileManager *manager = [NSFileManager defaultManager];
+            NSDictionary *attributes = [manager attributesOfItemAtPath:logfile error:nil];
+            unsigned long long size = [attributes fileSize];
+            NSString *string;
+            if (attributes && size == 0) {
+                // file exists, but is empty.
+                string = [NSString stringWithFormat:@"%@", query];
+            }else{
+                string = [NSString stringWithFormat:@"\n%@", query];
+            }
             [fileHandler seekToEndOfFile];
             [fileHandler writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
             [fileHandler closeFile];
@@ -42,27 +51,27 @@
         case UpdateTask:
             {Task *newTask = (Task*) object;
             NSLog(@"Updated task on server.");
-            query = [[NSString alloc]initWithFormat:@"%@f=updateTodo&tid=%f&t=%@&D=%@&d=%@&c=%@",url,1.0,newTask.name, newTask.description, newTask.date, newTask.category];
+                query = [[NSString alloc]initWithFormat:@"%@f=updateTodo&tid=%d&t=%@&D=%@&d=%@&c=Work",url,newTask.externalTaskID,newTask.name, newTask.description, newTask.date]; //newTask.category];
             }break;
         case DeleteTask:
             {Task *newTask = (Task*) object;
             NSLog(@"Deleted task on server.");
-            query = [[NSString alloc]initWithFormat:@"%@f=removeTodo&tid=%ld",url,(long)newTask.taskID];
+            query = [[NSString alloc]initWithFormat:@"%@f=removeTodo&tid=%d",url,newTask.externalTaskID];
         }break;
         case CreateNote:
-            {Task *newTask = (Task*) object;
+            {Note *newNote = (Note*) object;
             NSLog(@"Created note on server.");
-            query = [[NSString alloc]initWithFormat:@"%@f=addNote&tid=%ld&D=%@",url, (long)newTask.taskID, newTask.description];
+            query = [[NSString alloc]initWithFormat:@"%@f=addNote&tid=%d&D=%@",url, newNote.externalTaskID, newNote.description];
         }break;
         case UpdateNote:
             {Note *newNote = (Note*) object;
             NSLog(@"Updated note on server.");
-            query = [[NSString alloc]initWithFormat:@"%@f=updateNote&nid=%ld&D=%@",url, (long)newNote.noteID, newNote.description];
+            query = [[NSString alloc]initWithFormat:@"%@f=updateNote&nid=%d&D=%@",url, newNote.externalNoteID, newNote.description];
         }break;
         case DeleteNote:
             {Note *newNote = (Note*) object;
             NSLog(@"Deleted note on server.");
-            query = [[NSString alloc]initWithFormat:@"%@f=removeNote&nid=%ld",url,(long)newNote.noteID];
+            query = [[NSString alloc]initWithFormat:@"%@f=removeNote&nid=%d",url, newNote.externalNoteID];
         }break;
         case DeleteAll:
         {

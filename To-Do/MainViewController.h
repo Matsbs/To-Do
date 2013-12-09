@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Task.h"
-#import "ViewNoteController.h"
+#import "ViewTaskController.h"
 #import "NewTaskViewController.h"
 #import "DBManager.h"
 #import "LogManager.h"
