@@ -30,7 +30,7 @@
 //    [self.manager initManager];
 //    self.tasks = [self.manager getAllTasks];
     
-    
+      
     NSLog(@"fist object %d", (int)self.tasks.count);
    
     NSLog(@"fist object %d", (int)self.tasks.count);
