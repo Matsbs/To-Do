@@ -21,9 +21,19 @@
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
+    //Presistant
     self.dbManager = [[DBManager alloc]init];
     [self.dbManager initDatabase];
     self.tasks = [self.dbManager getAllTasks];
+    //Not presistant
+//    self.manager = [[Manager alloc]init];
+//    [self.manager initManager];
+//    self.tasks = [self.manager getAllTasks];
+    
+    
+    NSLog(@"fist object %d", (int)self.tasks.count);
+   
+    NSLog(@"fist object %d", (int)self.tasks.count);
     
     self.title = @"To-Do";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
@@ -85,6 +95,7 @@
 -(IBAction)delClicked:(id)sender{
     NSString *alertTitle = [[NSString alloc]initWithFormat:@"Are you sure you want to delete all tasks?"];
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Delete Tasks", nil ];
+    NSLog(@"fist object %d", (int)self.tasks.count);
     [alert show];
 }
 

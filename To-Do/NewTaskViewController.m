@@ -240,22 +240,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-//    if (indexPath.section==1) {
-//        NotesViewController *noteView = [[NotesViewController alloc] init];
-//        noteView.canEdit = YES;
-//        if (self.isEditingExistingTask==YES){
+    if (indexPath.section==1) {
+        NotesViewController *noteView = [[NotesViewController alloc] init];
+        noteView.canEdit = YES;
+        if (self.isEditingExistingTask==YES){
+            noteView.task = self.task;
+        }else{
+//            self.task = [[Task alloc]init];
+//            self.task.name = self.nameField.text;
+//            self.task.description = self.descriptionField.text;
+//            self.task.date = self.dateField.text;
+//            self.task.category = self.categoryField.text;
+//            [self.dbManager insertTask:self.task];
 //            noteView.task = self.task;
-//        }else{
-////            self.task = [[Task alloc]init];
-////            self.task.name = self.nameField.text;
-////            self.task.description = self.descriptionField.text;
-////            self.task.date = self.dateField.text;
-////            self.task.category = self.categoryField.text;
-////            [self.dbManager insertTask:self.task];
-////            noteView.task = self.task;
-//        }
-//        [self.navigationController pushViewController:noteView animated:YES];
-//    }
+        }
+        [self.navigationController pushViewController:noteView animated:YES];
+    }
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow: (NSInteger)row inComponent:(NSInteger)component{

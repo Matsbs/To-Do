@@ -21,6 +21,7 @@
 		4EA95C0418081E500061D231 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EA95BEC18081E4F0061D231 /* UIKit.framework */; };
 		4EA95C0C18081E500061D231 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4EA95C0A18081E500061D231 /* InfoPlist.strings */; };
 		4EA95C0E18081E500061D231 /* To_DoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EA95C0D18081E500061D231 /* To_DoTests.m */; };
+		4EB8B912186B9BFA00C6B3F3 /* Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EB8B911186B9BFA00C6B3F3 /* Manager.m */; };
 		4EBC94F4184F732A006AC2CE /* LogManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 4EBC94F3184F732A006AC2CE /* LogManager.m */; };
 		4ED4C41E1817D0FC006EB84F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4C4151817D0FC006EB84F /* MainViewController.m */; };
 		4ED4C41F1817D0FC006EB84F /* NewTaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4ED4C4171817D0FC006EB84F /* NewTaskViewController.m */; };
@@ -61,6 +62,8 @@
 		4EA95C0918081E500061D231 /* To-DoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "To-DoTests-Info.plist"; sourceTree = "<group>"; };
 		4EA95C0B18081E500061D231 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4EA95C0D18081E500061D231 /* To_DoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = To_DoTests.m; sourceTree = "<group>"; };
+		4EB8B910186B9BFA00C6B3F3 /* Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Manager.h; sourceTree = "<group>"; };
+		4EB8B911186B9BFA00C6B3F3 /* Manager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Manager.m; sourceTree = "<group>"; };
 		4EBC94F2184F732A006AC2CE /* LogManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogManager.h; sourceTree = "<group>"; };
 		4EBC94F3184F732A006AC2CE /* LogManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogManager.m; sourceTree = "<group>"; };
 		4ED4C4141817D0FC006EB84F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -146,6 +149,8 @@
 				4ED5BC5E181A61AD00C1765A /* Category1.m */,
 				4E5718B2184CCA96004FE39C /* DBManager.h */,
 				4E5718B3184CCA96004FE39C /* DBManager.m */,
+				4EB8B910186B9BFA00C6B3F3 /* Manager.h */,
+				4EB8B911186B9BFA00C6B3F3 /* Manager.m */,
 				4EBC94F2184F732A006AC2CE /* LogManager.h */,
 				4EBC94F3184F732A006AC2CE /* LogManager.m */,
 				4ED4C4141817D0FC006EB84F /* MainViewController.h */,
@@ -299,6 +304,7 @@
 				4ED4C4221817D0FC006EB84F /* ViewTaskController.m in Sources */,
 				4ED5BC5F181A61AD00C1765A /* Category1.m in Sources */,
 				4EBC94F4184F732A006AC2CE /* LogManager.m in Sources */,
+				4EB8B912186B9BFA00C6B3F3 /* Manager.m in Sources */,
 				4ED5BC56181A5FC000C1765A /* Note.m in Sources */,
 				4ED4C4201817D0FC006EB84F /* Task.m in Sources */,
 				4E5A7152181E6E05001ED6FF /* NotesViewController.m in Sources */,
