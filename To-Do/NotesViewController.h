@@ -10,6 +10,7 @@
 #import "Task.h"
 #import "NewTaskViewController.h"
 #import "DBManager.h"
+#import "Manager.h"
 #import "LogManager.h"
 
 @interface NotesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
@@ -18,6 +19,7 @@
 @property (nonatomic, retain) NSMutableArray *notes;
 @property (nonatomic, retain) UITextField IBOutlet *noteField;
 @property (nonatomic, retain) DBManager *dbManager;
+@property (nonatomic, retain) Manager *manager;
 @property (nonatomic, retain) Task *task;
 @property bool canEdit;
 

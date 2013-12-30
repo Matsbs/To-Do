@@ -22,8 +22,11 @@
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
-    self.dbManager = [[DBManager alloc]init];
-    [self.dbManager setDbPath];
+    //Persistant
+    //self.dbManager = [[DBManager alloc]init];
+    //[self.dbManager setDbPath];
+    //Not persistant
+    self.manager = [Manager sharedManager];
     
     self.title = self.task.name;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStyleGrouped];

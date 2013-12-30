@@ -20,8 +20,12 @@
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
-    self.dbManager = [[DBManager alloc]init];
-    [self.dbManager setDbPath];
+    //Persistant
+    //self.dbManager = [[DBManager alloc]init];
+    //[self.dbManager setDbPath];
+    //Not persistant
+    self.manager = [Manager sharedManager];
+    NSLog(@"task array size %d", (int)self.manager.taskArray.count);
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight+300) style:UITableViewStyleGrouped];
     self.tableView.scrollEnabled = YES;
@@ -50,19 +54,16 @@
 - (IBAction)doneClicked:(id)sender {
      LogManager *logMan = [[LogManager alloc] init];
     if (self.isEditingExistingTask==YES) {
-//        NSMutableArray *notes = [[NSMutableArray alloc]init];
-//        notes = [self.dbManager getNotesByTask:self.task];
-//        [self.dbManager deleteAllNotesToTask:self.task];
-//        [self.dbManager deleteTask:self.task];
         self.task.name = self.nameField.text;
         self.task.description = self.descriptionField.text;
         self.task.category = self.categoryField.text;
         self.task.date = self.dateField.text;
-        [self.dbManager updateTask:self.task];
+        //Persistant
+        //[self.dbManager updateTask:self.task];
+        //Not persistant
+        [self.manager updateTask:self.task];
+        NSLog(@"Updated task");
         [logMan writeToLog:UpdateTask :self.task];
-//        for(int i=0; i<notes.count; i++){
-//            [self.dbManager insertNote:[notes objectAtIndex:i]];
-//        }
         self.delegate = [self.navigationController.viewControllers objectAtIndex:0];
     }else{
         if (self.nameField.text.length > 0) {
@@ -71,7 +72,11 @@
             self.task.description = self.descriptionField.text;
             self.task.date = self.dateField.text;
             self.task.category = self.categoryField.text;
-            self.task.taskID = [self.dbManager insertTask:self.task];
+            //Persistant
+            //self.task.taskID = [self.dbManager insertTask:self.task];
+            //Not persistant
+            self.task.taskID = [self.manager insertTask:self.task];
+            NSLog(@"new size %d", (int)self.manager.taskArray.count);
             [logMan writeToLog:CreateTask :self.task];
         }
     }

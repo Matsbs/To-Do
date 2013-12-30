@@ -9,11 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "Task.h"
 #import "DBManager.h"
+#import "Manager.h"
 
 @interface ViewTaskController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) DBManager *dbManager;
+@property (nonatomic, retain) Manager *manager;
 
 @end

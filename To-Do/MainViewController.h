@@ -16,6 +16,7 @@
 
 @interface MainViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NewTaskViewControllerDelegate>
 
+@property (nonatomic, retain) UILabel *label;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) NSMutableArray *tasks;
 @property (nonatomic, retain) Task *task;

@@ -17,7 +17,6 @@
 @property (nonatomic, strong) NSMutableArray *noteArray;
 @property (nonatomic, strong) NSMutableArray *categoryArray;
 
-- (void)initManager;
 - (int)insertTask:(Task *)task;
 - (int)insertNote:(Note *)note;
 - (void)insertCategory:(Category1 *)category;
@@ -29,5 +28,7 @@
 - (NSMutableArray*)getNotesByTask: (Task *)task;
 - (void)deleteAllNotesToTask:(Task *)task;
 - (void)updateTask:(Task *)task;
++ (id)sharedManager;
+- (id)init;
 
 @end

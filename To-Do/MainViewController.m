@@ -20,20 +20,24 @@
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
-    
-    //Presistant
-    self.dbManager = [[DBManager alloc]init];
-    [self.dbManager initDatabase];
-    self.tasks = [self.dbManager getAllTasks];
-    //Not presistant
-//    self.manager = [[Manager alloc]init];
-//    [self.manager initManager];
-//    self.tasks = [self.manager getAllTasks];
+    //Persistant
+//    self.dbManager = [[DBManager alloc]init];
+//    [self.dbManager initDatabase];
+//    self.tasks = [self.dbManager getAllTasks];
+    //Not persistant
+    self.manager = [Manager sharedManager];
+    //[self.manager initManager];
+    self.tasks = [self.manager getAllTasks];
     
       
+//    NSLog(@"fist object %d", true);
+    Task *test = [[Task alloc]init];
+    test.name = @"hello world";
+    [self.manager insertTask:test];
+    self.tasks = [self.manager getAllTasks];
     NSLog(@"fist object %d", (int)self.tasks.count);
-   
-    NSLog(@"fist object %d", (int)self.tasks.count);
+    
+    
     
     self.title = @"To-Do";
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
@@ -52,7 +56,10 @@
 }
 
 - (void)reloadTableData:(NewTaskViewController *)controller{
-    self.tasks = [self.dbManager getAllTasks];
+    //Presistant
+    //self.tasks = [self.dbManager getAllTasks];
+    //Not persistant
+    self.tasks = [self.manager getAllTasks];
     [self.tableView reloadData];
 }
 
@@ -101,8 +108,13 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     if (buttonIndex == 1) {
-        [self.dbManager deleteAllTasks];
-        self.tasks = [self.dbManager getAllTasks];
+        //Persistat
+        //[self.dbManager deleteAllTasks];
+        //self.tasks = [self.dbManager getAllTasks];
+        //Not Persistant
+        [self.manager deleteAllTasks];
+        self.tasks = [self.manager getAllTasks];
+        NSLog(@"All files deleted, size %d", (int)self.manager.taskArray.count);
         [self.tableView reloadData];
     }
 }
@@ -176,13 +188,21 @@
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle) editing
  forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editing == UITableViewCellEditingStyleDelete) {
-        [self.dbManager deleteAllNotesToTask:[self.tasks objectAtIndex:indexPath.row]];
-        [self.dbManager deleteTask:[self.tasks objectAtIndex:indexPath.row]];
+        //Persistant
+        //[self.dbManager deleteAllNotesToTask:[self.tasks objectAtIndex:indexPath.row]];
+        //[self.dbManager deleteTask:[self.tasks objectAtIndex:indexPath.row]];
+        
+
         LogManager *logMan = [[LogManager alloc]init];
         [logMan writeToLog:DeleteTask :[self.tasks objectAtIndex:indexPath.row]];
-        
+        Task *taskToBeDeleted = [self.tasks objectAtIndex:indexPath.row];
         [self.tasks removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        
+        //Not persistant
+        [self.manager deleteAllNotesToTask:taskToBeDeleted];
+        [self.manager deleteTask:taskToBeDeleted];
+        NSLog(@"Task deleted, new size %d", (int)self.manager.taskArray.count);
     }else{
         NewTaskViewController *newTaskView = [[NewTaskViewController alloc] init];
         self.editing = NO;

@@ -21,9 +21,13 @@
     CGFloat screenWidth = screenRect.size.width;
     CGFloat screenHeight = screenRect.size.height;
     
-    self.dbManager = [[DBManager alloc]init];
-    [self.dbManager setDbPath];
-    self.notes = [self.dbManager getNotesByTask:self.task];
+    //Persistant
+//    self.dbManager = [[DBManager alloc]init];
+//    [self.dbManager setDbPath];
+//    self.notes = [self.dbManager getNotesByTask:self.task];
+    //Not persistant
+    self.manager = [Manager sharedManager];
+    self.notes = [self.manager getNotesByTask:self.task];
     
     self.title = self.task.name;
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, screenHeight) style:UITableViewStylePlain];
@@ -95,21 +99,25 @@
  forRowAtIndexPath:(NSIndexPath *)indexPath {
     LogManager *logMan = [[LogManager alloc]init];
     if(editing == UITableViewCellEditingStyleDelete ) {
-        [self.dbManager deleteNote:[self.notes objectAtIndex:indexPath.row]];
         [logMan writeToLog:DeleteNote:[self.notes objectAtIndex:indexPath.row]];
         
+        Note *noteToBeDeleted = [self.notes objectAtIndex:indexPath.row];
         [self.notes removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
                          withRowAnimation:UITableViewRowAnimationLeft];
+        [self.manager deleteNote:noteToBeDeleted];
     }else{
         Note *newNote = [[Note alloc]init];
         newNote.description = self.noteField.text;
         newNote.taskID = self.task.taskID;
         newNote.externalTaskID = self.task.externalTaskID;
-        newNote.noteID = [self.dbManager insertNote:newNote];
+        //Persistant
+        //newNote.noteID = [self.dbManager insertNote:newNote];
+        //self.notes = [self.dbManager getNotesByTask:self.task];
+        //Not persistant
+        newNote.noteID = [self.manager insertNote:newNote];
+        self.notes = [self.manager getNotesByTask:self.task];
         [logMan writeToLog:CreateNote :newNote];
-        
-        self.notes = [self.dbManager getNotesByTask:self.task];
         [self.tableView reloadData];
     }
 }

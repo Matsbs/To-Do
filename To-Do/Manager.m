@@ -10,11 +10,10 @@
 
 @implementation Manager
 
-
-//fikse det med taskID
 - (int)insertTask:(Task *)task{
     [self.taskArray addObject:task];
-    return ([self.taskArray count]-1.0);
+    NSLog(@"Size of task array %d", (int)self.taskArray.count);
+    return ((int)[self.taskArray indexOfObject:task]);
 }
 
 - (void)updateTask:(Task *)task{
@@ -88,10 +87,26 @@
     [self.taskArray removeAllObjects];
 }
 
+
 - (void) initManager{
     self.taskArray = [[NSMutableArray alloc]init];
     self.noteArray = [[NSMutableArray alloc]init];
     self.categoryArray = [[NSMutableArray alloc]init];
+}
+
++ (id)sharedManager {
+    static Manager *sharedMyManager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedMyManager = [[self alloc] init];
+    });
+    return sharedMyManager;
+}
+- (id)init {
+    self.taskArray = [[NSMutableArray alloc]init];
+    self.noteArray = [[NSMutableArray alloc]init];
+    self.categoryArray = [[NSMutableArray alloc]init];
+    return self;
 }
 
 @end

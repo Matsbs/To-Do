@@ -10,6 +10,7 @@
 #import "Task.h"
 #import "NotesViewController.h"
 #import "DBManager.h"
+#import "Manager.h"
 
 @class NewTaskViewController;
 
@@ -30,6 +31,7 @@
 @property (nonatomic, retain) Task *task;
 @property (nonatomic, retain) UITableView *tableView;
 @property (nonatomic, retain) DBManager *dbManager;
+@property (nonatomic, retain) Manager *manager;
 @property bool isEditingExistingTask;
 
 @end
